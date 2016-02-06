@@ -27,21 +27,23 @@
 
 package hm.binkley.spring.axon.repositories;
 
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
+import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringApplicationConfiguration(classes = RepositoriesTestConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public final class RepositoriesIT {
     @Autowired
-    private List<? extends AbstractAnnotatedAggregateRoot> repositories;
+    private EventSourcingRepository<RepositoriesTestAggregateRoot> repository;
 
     @Test
-    public void should() {}
+    public void shouldWireRepository() {
+        assertThat(repository).isNotNull();
+    }
 }
