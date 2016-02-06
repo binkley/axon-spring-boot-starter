@@ -36,8 +36,10 @@ import org.axonframework.domain.IdentifierFactory;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.SimpleEventBus;
 import org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPostProcessor;
+import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.supporting.VolatileEventStore;
+import org.springframework.beans.factory.serviceloader.ServiceListFactoryBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -50,6 +52,7 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
  * @todo Needs documentation.
  * @todo Should many of these beans be left out, requiring user to provide?
+ * @todo Switch to META-INF/spring.factories and drop @EnableAxon
  */
 @Configuration
 @ConditionalOnClass(CommandBus.class)
@@ -77,6 +80,23 @@ public class AxonAutoConfiguration {
     public EventStore eventStore()
             throws Exception {
         return new VolatileEventStore();
+    }
+
+    @SuppressWarnings("MethodReturnOfConcreteClass")
+    @Bean
+    public EventSourcingRepositoryFactory eventSourcingRepositoryFactory(
+            final CommandBus commandBus, final EventBus eventBus,
+            final EventStore eventStore) {
+        return new EventSourcingRepositoryFactory(commandBus, eventBus,
+                eventStore);
+    }
+
+    @Bean
+    public ServiceListFactoryBean serviceListFactoryBean() {
+        final ServiceListFactoryBean factoryBean
+                = new ServiceListFactoryBean();
+        factoryBean.setServiceType(AbstractAnnotatedAggregateRoot.class);
+        return factoryBean;
     }
 
     @Bean

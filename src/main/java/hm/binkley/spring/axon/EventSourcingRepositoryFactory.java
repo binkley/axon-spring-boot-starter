@@ -43,13 +43,6 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 import static java.lang.String.format;
 
-/**
- * {@code EventSourcingRepositoryFactory} creates default event sourcing
- * repositories.
- *
- * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
- * @todo Needs documentation.
- */
 @RequiredArgsConstructor
 public class EventSourcingRepositoryFactory
         implements BeanPostProcessor, BeanFactoryAware {

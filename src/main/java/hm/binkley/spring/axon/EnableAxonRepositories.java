@@ -41,10 +41,9 @@ import java.lang.annotation.Target;
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
  * @todo Needs documentation.
- * @todo Switch to META-INF/spring.factories and drop @EnableAxon
  */
 @Documented
-@Import(AxonAutoConfiguration.class)
+@Import(AxonRepositoriesAutoConfiguration.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface EnableAxon {}
+public @interface EnableAxonRepositories {}

@@ -27,24 +27,47 @@
 
 package hm.binkley.spring.axon;
 
+import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.eventhandling.EventBus;
+import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
+import org.axonframework.eventstore.EventStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.annotation.PostConstruct;
+
+import static java.util.ServiceLoader.load;
 
 /**
- * {@code EnableAxon} is a meta-annotation to autoconfigure Axon for Spring
- * Boot.
+ * {@code AxonRepositoriesAutoConfiguration} autoconfigures Axon Framework for
+ * Spring Boot with automated beans for repositories.
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
  * @todo Needs documentation.
- * @todo Switch to META-INF/spring.factories and drop @EnableAxon
  */
-@Documented
+@Configuration
+@ConditionalOnClass(CommandBus.class)
 @Import(AxonAutoConfiguration.class)
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface EnableAxon {}
+public class AxonRepositoriesAutoConfiguration {
+    @Autowired
+    private AnnotationConfigApplicationContext context;
+
+    @SuppressWarnings("MethodReturnOfConcreteClass")
+    @Bean
+    public EventSourcingRepositoryFactory eventSourcingRepositoryFactory(
+            final CommandBus commandBus, final EventBus eventBus,
+            final EventStore eventStore) {
+        return new EventSourcingRepositoryFactory(commandBus, eventBus,
+                eventStore);
+    }
+
+    @PostConstruct
+    public void registerRepositories() {
+        load(AbstractAnnotatedAggregateRoot.class).
+                forEach(root -> context.register(root.getClass()));
+    }
+}

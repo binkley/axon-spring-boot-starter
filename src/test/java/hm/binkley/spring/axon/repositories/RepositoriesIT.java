@@ -25,26 +25,23 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon;
+package hm.binkley.spring.axon.repositories;
 
-import org.springframework.context.annotation.Import;
+import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.List;
 
-/**
- * {@code EnableAxon} is a meta-annotation to autoconfigure Axon for Spring
- * Boot.
- *
- * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
- * @todo Needs documentation.
- * @todo Switch to META-INF/spring.factories and drop @EnableAxon
- */
-@Documented
-@Import(AxonAutoConfiguration.class)
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface EnableAxon {}
+@SpringApplicationConfiguration(classes = RepositoriesTestConfiguration.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+public final class RepositoriesIT {
+    @Autowired
+    private List<? extends AbstractAnnotatedAggregateRoot> repositories;
+
+    @Test
+    public void should() {}
+}
