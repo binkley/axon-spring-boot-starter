@@ -7,6 +7,8 @@
   * Clearly describe the issue including steps to reproduce when it is a bug.
   * Make sure you fill in the earliest version that you know has the issue.
 * Fork the repository on GitHub.
+* Add yourself to the `<contributors/>` block in `pom.xml` with the role,
+  "contributor".
 
 ## Making Changes
 
