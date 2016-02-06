@@ -39,11 +39,16 @@ import org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPos
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.supporting.VolatileEventStore;
-import org.springframework.beans.factory.serviceloader.ServiceListFactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
+
+import static java.util.ServiceLoader.load;
 
 /**
  * {@code AxonAutoConfiguration} autoconfigures Axon Framework for Spring
@@ -57,6 +62,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnClass(CommandBus.class)
 public class AxonAutoConfiguration {
+    @Autowired
+    private AnnotationConfigApplicationContext context;
+
     @Bean
     @ConditionalOnMissingBean
     public CommandBus commandBus() {
@@ -91,12 +99,10 @@ public class AxonAutoConfiguration {
                 eventStore);
     }
 
-    @Bean
-    public ServiceListFactoryBean serviceListFactoryBean() {
-        final ServiceListFactoryBean factoryBean
-                = new ServiceListFactoryBean();
-        factoryBean.setServiceType(AbstractAnnotatedAggregateRoot.class);
-        return factoryBean;
+    @PostConstruct
+    public void registerRepositories() {
+        load(AbstractAnnotatedAggregateRoot.class).
+                forEach(root -> context.register(root.getClass()));
     }
 
     @Bean

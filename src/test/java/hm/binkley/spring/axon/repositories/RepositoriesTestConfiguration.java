@@ -27,9 +27,9 @@
 
 package hm.binkley.spring.axon.repositories;
 
-import hm.binkley.spring.axon.EnableAxonRepositories;
+import hm.binkley.spring.axon.EnableAxon;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableAxonRepositories
+@EnableAxon
 public class RepositoriesTestConfiguration {}
