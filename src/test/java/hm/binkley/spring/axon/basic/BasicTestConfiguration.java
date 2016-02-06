@@ -27,9 +27,9 @@
 
 package hm.binkley.spring.axon.basic;
 
-import hm.binkley.spring.axon.EnableAxon;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableAxon
+@EnableAutoConfiguration
 public class BasicTestConfiguration {}
