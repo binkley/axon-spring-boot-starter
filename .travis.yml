@@ -1,15 +1,15 @@
 sudo: false
 # Force newer JDK - compiler busted in _31 -- see - https://github.com/travis-ci/travis-ci/issues/3259
 addons:
-    apt:
-        packages:
-            - oracle-java8-installer 
+  apt:
+    packages:
+      - oracle-java8-installer 
 language: java
 jdk:
-    - oraclejdk8
+  - oraclejdk8
 # TODO: Gross until Travis support setting maven version or upgrades to 3.3
 before_install:
-    - wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+  - wget http://www.us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
   - tar zxvf apache-maven-3.3.9-bin.tar.gz
   - chmod +x apache-maven-3.3.9/bin/mvn
   - export M2_HOME=$PWD/apache-maven-3.3.9
