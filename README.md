@@ -11,6 +11,8 @@ This project is heavily indebted to:
 
 ## Features
 
+* Autoconfiguration driven with standard `@EnableAutoConfiguration`.
 * Autoconfigure `CommandBus`, `EventBus` and `EventStore` with default
-  implementations.
+  implementations.  In particular, replace the event store: the default
+  is in-memory.
 * Autoconfigure aggregate root repositories marked with `@MetaInfServices`.
