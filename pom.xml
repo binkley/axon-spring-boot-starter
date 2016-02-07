@@ -65,6 +65,7 @@
         <generateBackupPoms>false</generateBackupPoms>
         <java.charset>UTF-8</java.charset>
         <java.version>1.8</java.version>
+        <jdeps.verbose>false</jdeps.verbose>
         <junit.version>4.12</junit.version>
         <lombok.version>1.16.6</lombok.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -225,6 +226,9 @@
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>${maven-dependency-plugin.version}</version>
+                <configuration>
+                    <silent>true</silent>
+                </configuration>
                 <executions>
                     <execution>
                         <id>record-versions</id>
@@ -338,6 +342,7 @@
                     <charset>${java.charset}</charset>
                     <keywords>true</keywords>
                     <linksource>true</linksource>
+                    <quiet>true</quiet>
                     <tags>
                         <tag>
                             <name>todo</name>

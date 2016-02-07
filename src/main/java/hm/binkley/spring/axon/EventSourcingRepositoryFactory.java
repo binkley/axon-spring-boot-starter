@@ -29,12 +29,11 @@ package hm.binkley.spring.axon;
 
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.annotation.AggregateAnnotationCommandHandler;
-import org.axonframework.domain.AggregateRoot;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventsourcing.EventSourcedAggregateRoot;
 import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.axonframework.eventstore.EventStore;
+import org.axonframework.repository.AbstractRepository;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -42,6 +41,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 import static java.lang.String.format;
+import static org.axonframework.commandhandling.annotation.AggregateAnnotationCommandHandler.subscribe;
 
 @RequiredArgsConstructor
 public class EventSourcingRepositoryFactory
@@ -58,23 +58,24 @@ public class EventSourcingRepositoryFactory
         return bean;
     }
 
+    /** @todo Register an AggregateFactory rather than type token? */
+    @SuppressWarnings("unchecked")
     @Override
     public Object postProcessAfterInitialization(final Object bean,
             final String beanName)
             throws BeansException {
-        if (EventSourcedAggregateRoot.class
-                .isAssignableFrom(bean.getClass())) {
-            final AggregateRoot aggregateRoot = (AggregateRoot) bean;
-            final EventSourcingRepository repository
-                    = new EventSourcingRepository(bean.getClass(),
-                    eventStore);
-            repository.setEventBus(eventBus);
-            beanFactory.registerSingleton(format("%sRepository", beanName),
-                    repository);
-            AggregateAnnotationCommandHandler
-                    .subscribe(aggregateRoot.getClass(), repository,
-                            commandBus);
-        }
+        final Class<?> beanType = bean.getClass();
+        if (!EventSourcedAggregateRoot.class.isAssignableFrom(beanType))
+            return bean;
+
+        final AbstractRepository repository = new EventSourcingRepository(
+                beanType, eventStore);
+        repository.setEventBus(eventBus);
+        subscribe((Class<? extends EventSourcedAggregateRoot>) beanType,
+                repository, commandBus);
+
+        beanFactory.registerSingleton(format("%sRepository", beanName),
+                repository);
 
         return bean;
     }
