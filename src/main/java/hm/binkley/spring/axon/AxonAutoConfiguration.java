@@ -38,8 +38,8 @@ import org.axonframework.eventhandling.SimpleEventBus;
 import org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPostProcessor;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventstore.EventStore;
-import org.axonframework.eventstore.supporting.VolatileEventStore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -52,7 +52,8 @@ import static java.util.ServiceLoader.load;
 
 /**
  * {@code AxonAutoConfiguration} autoconfigures Axon Framework for Spring
- * Boot.
+ * Boot.  Use {@link EnableAutoConfiguration} on your configuration class, and
+ * define a bean for {@link EventStore}.
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
  * @todo Needs documentation.
@@ -81,13 +82,6 @@ public class AxonAutoConfiguration {
     @ConditionalOnMissingBean
     public EventBus eventBus() {
         return new SimpleEventBus();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public EventStore eventStore()
-            throws Exception {
-        return new VolatileEventStore();
     }
 
     @SuppressWarnings("MethodReturnOfConcreteClass")

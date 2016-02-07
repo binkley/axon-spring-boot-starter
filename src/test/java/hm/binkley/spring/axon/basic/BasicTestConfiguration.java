@@ -27,9 +27,18 @@
 
 package hm.binkley.spring.axon.basic;
 
+import org.axonframework.eventstore.EventStore;
+import org.axonframework.eventstore.supporting.VolatileEventStore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableAutoConfiguration
-public class BasicTestConfiguration {}
+public class BasicTestConfiguration {
+    @Bean
+    public EventStore eventStore()
+            throws Exception {
+        return new VolatileEventStore();
+    }
+}
