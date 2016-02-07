@@ -17,8 +17,13 @@ This project is heavily indebted to:
 
 ## Features
 
-* Autoconfiguration driven with standard `@EnableAutoConfiguration`.
+* Autoconfiguration driven with [standard `@EnableAutoConfiguration` and
+  `META-INF/spring.factories`](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-auto-configuration.html).
+  Include the jar in your classpath and add the annotation to a configuration
+  class.
 * Autoconfigure `CommandBus`, `EventBus` and `EventStore` with default
-  implementations.  In particular, replace the event store: the default
-  is in-memory.
+  implementations.  In particular, *replace the event store*: the default
+  is in-memory, suitable only for testing.
 * Autoconfigure aggregate root repositories marked with `@MetaInfServices`.
+  These generate entries in
+  `/META-INF/services/org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot`.
