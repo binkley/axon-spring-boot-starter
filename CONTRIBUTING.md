@@ -9,6 +9,7 @@
 * Fork the repository on GitHub.
 * Add yourself to the `<contributors/>` block in `pom.xml` with the role,
   "contributor".
+* Use of gitflow is encouraged.
 
 ## Making Changes
 

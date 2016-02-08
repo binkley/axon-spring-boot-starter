@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -9,8 +12,11 @@
     </parent>
 
     <groupId>hm.binkley</groupId>
-    <artifactId>spring-boot-starter-axon</artifactId>
+    <artifactId>spring-boot-starter-axon-parent</artifactId>
     <version>1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Spring Boot/Axon Starter - Parent</name>
 
     <contributors>
         <contributor>
@@ -53,6 +59,10 @@
         <url>https://github.com/binkley/spring-boot-starter-axon</url>
     </scm>
 
+    <modules>
+        <module>spring-boot-starter-axon</module>
+    </modules>
+
     <properties>
         <!-- @formatter:off -->
         <assertj.version>3.3.0</assertj.version>
@@ -81,10 +91,30 @@
         <project.build.sourceEncoding>${java.charset}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${java.charset}</project.reporting.outputEncoding>
         <project.reporting.sourceEncoding>${java.charset}</project.reporting.sourceEncoding>
-        <root.basedir>${project.basedir}</root.basedir>
         <versions-maven-plugin.version>2.2</versions-maven-plugin.version>
         <!-- @formatter:on -->
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.axonframework</groupId>
+                <artifactId>axon-core</artifactId>
+                <version>${axon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.persistence</groupId>
+                <artifactId>persistence-api</artifactId>
+                <version>${persistence-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.axonframework</groupId>
+                <artifactId>axon-monitoring-jmx</artifactId>
+                <version>${axon.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -98,28 +128,6 @@
             <artifactId>metainf-services</artifactId>
             <version>${metainf-services.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-core</artifactId>
-            <version>${axon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>${persistence-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-monitoring-jmx</artifactId>
-            <version>${axon.version}</version>
-            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -180,7 +188,7 @@
                         <id>enforce</id>
                         <configuration>
                             <rules>
-                                <banCircularDependencies />
+                                <banCircularDependencies/>
                                 <banDuplicateClasses>
                                     <findAllDuplicates>true
                                     </findAllDuplicates>
@@ -201,7 +209,7 @@
                                     <maxJdkVersion>${java.version}
                                     </maxJdkVersion>
                                 </enforceBytecodeVersion>
-                                <reactorModuleConvergence />
+                                <reactorModuleConvergence/>
                                 <requireJavaVersion>
                                     <version>${java.version}</version>
                                 </requireJavaVersion>
@@ -218,7 +226,7 @@
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>${versions-maven-plugin.version}</version>
                 <configuration>
-                    <rulesUri>file://${root.basedir}/maven-version-rules.xml
+                    <rulesUri>file://${session.executionRootDirectory}/maven-version-rules.xml
                     </rulesUri>
                 </configuration>
                 <executions>
@@ -376,6 +384,9 @@
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${maven-jar-plugin.version}</version>
+                <configuration>
+                    <skipIfEmpty>true</skipIfEmpty>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

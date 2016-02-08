@@ -71,6 +71,11 @@ public class SomeClassUsingRespository {
 
 ## Releases
 
+### 1
+
+* Break project into multi-module reactor build.  Separate axon starters in
+  separate modules.
+
 ### 0
 
 * Basic functionality, single project, simple defaults for Axon components
