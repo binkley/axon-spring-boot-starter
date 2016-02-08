@@ -10,7 +10,7 @@
 
     <groupId>hm.binkley</groupId>
     <artifactId>spring-boot-starter-axon</artifactId>
-    <version>0</version>
+    <version>1-SNAPSHOT</version>
 
     <contributors>
         <contributor>
