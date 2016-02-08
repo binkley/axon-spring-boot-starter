@@ -66,6 +66,7 @@
         <java.charset>UTF-8</java.charset>
         <java.version>1.8</java.version>
         <jdeps.verbose>false</jdeps.verbose>
+        <jgitflow-maven-plugin.version>1.0-m5.1</jgitflow-maven-plugin.version>
         <junit.version>4.12</junit.version>
         <lombok.version>1.16.6</lombok.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -161,6 +162,11 @@
                 <groupId>fr.jcgay.maven.plugins</groupId>
                 <artifactId>buildplan-maven-plugin</artifactId>
                 <version>${buildplan-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <version>${jgitflow-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
