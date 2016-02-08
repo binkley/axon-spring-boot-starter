@@ -53,6 +53,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
+import java.util.ServiceLoader;
+
 import static java.util.ServiceLoader.load;
 import static java.util.stream.StreamSupport.stream;
 
@@ -60,6 +62,29 @@ import static java.util.stream.StreamSupport.stream;
  * {@code AxonAutoConfiguration} autoconfigures Axon Framework for Spring
  * Boot.  Use {@link EnableAutoConfiguration} on your configuration class, and
  * define a bean for {@link EventStore}.
+ * <p>
+ * A minimal configuration is: <pre>   &#64;Configuration
+ * &#64;EnableAutoConfiguration
+ * public class AConfiguration {
+ *     &#64;Bean
+ *     public EventStore eventStore() {
+ *         return ...;
+ *     }
+ * }</pre> In other classes inject Axon types
+ * normally with {@code @Autowired}.  When injecting
+ * repositories include the bean name: <pre>   &#64;Autowired
+ * &#64;Qualifier("someAggregateRepository")
+ * private EventSourcingRepository&lt;SomeAggregate&gt; repository;</pre>
+ * For autoconfiguration to create the repository, mark your aggregate root
+ * class with {@code @MetaInfServices} and extend {@link
+ * AbstractAnnotatedAggregateRoot}:
+ * <pre>   &#64;MetaInfServices
+ * public class SomeAggregate
+ *         extends AbstractAnnotatedAggregateRoot&lt;SomeIDType&gt;
+ *     &#64;AggregateIdentifier
+ *     private SomeIDType id;
+ * }</pre>  Autoconfigurating repositories uses standard {@link ServiceLoader}
+ * to discover aggregate root classes.
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
  */

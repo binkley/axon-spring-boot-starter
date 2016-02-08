@@ -23,7 +23,8 @@ This project is heavily indebted to:
   class.
 * Autoconfigure `CommandBus` and `EventBus` with default
   implementations.  In particular, your configuration must define a bean for
-  `EventStore`.
+  `EventStore`: there are too many strategies for event stores for
+  autoconfiguration to pick a default one for you.
 * Autoconfigure aggregate root repositories marked with `@MetaInfServices`.
   The matching repository bean is the aggregate bean name appended with
   "Repository".  These generate entries in
@@ -31,3 +32,38 @@ This project is heavily indebted to:
   Note you *must* annotated injected repository fields with
   `@Qualified(name-of-repostiroy)` because of limitations in Spring's support
   for generics.
+
+## Minimal Example
+
+### Configuration
+
+```
+@Configuration
+@EnableAutoConfiguration
+public class AConfiguration {
+    @Bean
+    public EventStore eventStore() {
+        return ...;
+    }
+}
+```
+
+### Aggregate root and repository
+
+```
+@MetaInfServices
+public class SomeAggregateRoot
+        extends AbstractAnnotatedAggregateRoot<SomeIDType> {
+    @AggregateIdentifier
+    private SomeIDType id;
+}
+```
+
+```
+@Component
+public class SomeClassUsingRespository {
+    @Autowired
+    @Qualifier("someAggregateRootRepository")
+    private EventSourcingRepository<SomeAggregateRoot> repository;
+}
+```
