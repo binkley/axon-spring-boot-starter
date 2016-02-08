@@ -28,6 +28,7 @@
 package hm.binkley.spring.axon.repositories;
 
 import org.axonframework.eventsourcing.EventSourcingRepository;
+import org.axonframework.repository.Repository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public final class RepositoriesIT {
     private EventSourcingRepository<RepositoriesTestAggregateRoot> repository;
     @Autowired
     @Qualifier("repositoriesTestAggregateRootRepository")
-    private EventSourcingRepository<RepositoriesTestAggregateRoot> duplicate;
+    private Repository<RepositoriesTestAggregateRoot> duplicate;
 
     @Test
     public void shouldWireRepository() {

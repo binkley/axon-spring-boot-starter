@@ -74,7 +74,7 @@ import static java.util.stream.StreamSupport.stream;
  * normally with {@code @Autowired}.  When injecting
  * repositories include the bean name: <pre>   &#64;Autowired
  * &#64;Qualifier("someAggregateRepository")
- * private EventSourcingRepository&lt;SomeAggregate&gt; repository;</pre>
+ * private Repository&lt;SomeAggregate&gt; repository;</pre>
  * For autoconfiguration to create the repository, mark your aggregate root
  * class with {@code @MetaInfServices} and extend {@link
  * AbstractAnnotatedAggregateRoot}:

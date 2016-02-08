@@ -64,6 +64,6 @@ public class SomeAggregateRoot
 public class SomeClassUsingRespository {
     @Autowired
     @Qualifier("someAggregateRootRepository")
-    private EventSourcingRepository<SomeAggregateRoot> repository;
+    private Repository<SomeAggregateRoot> repository;
 }
 ```
