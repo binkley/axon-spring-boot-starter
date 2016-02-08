@@ -62,9 +62,6 @@ import static java.util.stream.StreamSupport.stream;
  * define a bean for {@link EventStore}.
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
- * @todo Needs documentation.
- * @todo Should many of these beans be left out, requiring user to provide?
- * @todo Switch to META-INF/spring.factories and drop @EnableAxon
  */
 @Configuration
 @ConditionalOnClass(CommandBus.class)

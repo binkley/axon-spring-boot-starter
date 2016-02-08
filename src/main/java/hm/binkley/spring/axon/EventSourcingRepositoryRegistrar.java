@@ -66,7 +66,6 @@ public class EventSourcingRepositoryRegistrar
         return bean;
     }
 
-    /** @todo Register an AggregateFactory rather than type token? */
     @Override
     public Object postProcessAfterInitialization(final Object bean,
             final String beanName)
