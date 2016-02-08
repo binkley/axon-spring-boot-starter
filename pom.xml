@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -13,7 +10,7 @@
 
     <groupId>hm.binkley</groupId>
     <artifactId>spring-boot-starter-axon</artifactId>
-    <version>0-SNAPSHOT</version>
+    <version>0</version>
 
     <contributors>
         <contributor>
@@ -66,6 +63,7 @@
         <java.charset>UTF-8</java.charset>
         <java.version>1.8</java.version>
         <jdeps.verbose>false</jdeps.verbose>
+        <jgitflow-maven-plugin.version>1.0-m5.1</jgitflow-maven-plugin.version>
         <junit.version>4.12</junit.version>
         <lombok.version>1.16.6</lombok.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -163,6 +161,11 @@
                 <version>${buildplan-maven-plugin.version}</version>
             </plugin>
             <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <version>${jgitflow-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>${maven-enforcer-plugin.version}</version>
                 <dependencies>
@@ -177,7 +180,7 @@
                         <id>enforce</id>
                         <configuration>
                             <rules>
-                                <banCircularDependencies/>
+                                <banCircularDependencies />
                                 <banDuplicateClasses>
                                     <findAllDuplicates>true
                                     </findAllDuplicates>
@@ -198,7 +201,7 @@
                                     <maxJdkVersion>${java.version}
                                     </maxJdkVersion>
                                 </enforceBytecodeVersion>
-                                <reactorModuleConvergence/>
+                                <reactorModuleConvergence />
                                 <requireJavaVersion>
                                     <version>${java.version}</version>
                                 </requireJavaVersion>

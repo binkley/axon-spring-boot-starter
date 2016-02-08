@@ -27,9 +27,10 @@ This project is heavily indebted to:
   autoconfiguration to pick a default one for you.
 * Autoconfigure aggregate root repositories marked with `@MetaInfServices`.
   The matching repository bean is the aggregate bean name appended with
-  "Repository".  These generate entries in
+  "Repository" ("fooRoot" becomes "fooRootRepository").  These generate
+  entries in
   `/META-INF/services/org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot`.
-  Note you *must* annotated injected repository fields with
+  Note you *must* annotate injected repository fields with
   `@Qualified(name-of-repostiroy)` because of limitations in Spring's support
   for generics.
 
@@ -67,3 +68,9 @@ public class SomeClassUsingRespository {
     private Repository<SomeAggregateRoot> repository;
 }
 ```
+
+## Releases
+
+### 0
+
+* Basic functionality, single project, simple defaults for Axon components
