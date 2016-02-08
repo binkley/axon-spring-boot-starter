@@ -18,18 +18,25 @@
   * Use release branches if the fix applies there.  Always cherry pick fixes
     to `master` if relevant.
   * Do not push local feature branches into the repo without group consensus.
+* When possible reference a Github Issue in your commit message.
+  * Close issues in Github using [a commit
+  message](https://help.github.com/articles/closing-issues-via-commit-messages/)
+  (NB--"Fixes #1", not "Fixed #1").
 
 ## Code Style
 
 * Lines are 80 characters maximum.  Exceptions:
-  * Import lines may be long to avoid awkward wrapping.
-* Use standard Java code style.  You know it when you see it.  Exceptions:
+  * Long import lines are OK to avoid awkward wrapping.
+* Ensure all changes use UNIX file endings and UTF-8 encoding, and that only
+  scripts have an execute bit (source files are not executable).
+* Use [standard Java code
+  style](http://www.oracle.com/technetwork/java/codeconvtoc-136057.html).
+  You know it when you see it.  Exceptions:
   * For empty classes and methods, it is OK to collapse the curly braces
     rather than put them on separate lines.
   * For block syntax, it is OK to leave out optional curly braces if the
-    meaning of the code does not change.
+    meaning of the code does not change, such as in a for-each loop with a
+    single line of action on the current iteration element.
   * For `extends` and `implements`, it is OK to break the line early.  If you
     do so, indent is 8 characters, ala standard Java style.
-* Ensure all changes use UNIX file endings and UTF-8 encoding, and that only
-  scripts have an execute bit (source files are not executable).
 * Check for unnecessary whitespace with `git diff --check` before committing.
