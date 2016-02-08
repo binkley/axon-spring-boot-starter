@@ -61,6 +61,7 @@
 
     <modules>
         <module>spring-boot-starter-axon</module>
+        <module>spring-boot-starter-axon-distributed-commandbus</module>
     </modules>
 
     <properties>
@@ -98,6 +99,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>spring-boot-starter-axon</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-core</artifactId>
                 <version>${axon.version}</version>
@@ -112,6 +118,11 @@
                 <artifactId>axon-monitoring-jmx</artifactId>
                 <version>${axon.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.axonframework</groupId>
+                <artifactId>axon-distributed-commandbus</artifactId>
+                <version>${axon.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
