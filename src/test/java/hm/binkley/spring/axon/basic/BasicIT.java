@@ -38,8 +38,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringApplicationConfiguration(classes = BasicTestConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = BasicTestConfiguration.class)
 public final class BasicIT {
     @Autowired
     private CommandBus commandBus;

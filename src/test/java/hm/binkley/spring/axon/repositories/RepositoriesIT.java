@@ -31,19 +31,29 @@ import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringApplicationConfiguration(classes = RepositoriesTestConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = RepositoriesTestConfiguration.class)
 public final class RepositoriesIT {
     @Autowired
+    @Qualifier("repositoriesTestAggregateRootRepository")
     private EventSourcingRepository<RepositoriesTestAggregateRoot> repository;
+    @Autowired
+    @Qualifier("repositoriesTestAggregateRootRepository")
+    private EventSourcingRepository<RepositoriesTestAggregateRoot> duplicate;
 
     @Test
     public void shouldWireRepository() {
         assertThat(repository).isNotNull();
+    }
+
+    @Test
+    public void shouldCreateSingleton() {
+        assertThat(duplicate).isSameAs(repository);
     }
 }

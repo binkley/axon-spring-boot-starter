@@ -41,6 +41,11 @@ import org.springframework.context.annotation.Configuration;
 @EnableAutoConfiguration
 public class BasicTestWithCustomConfiguration {
     @Bean
+    public EventStore eventStore() {
+        return new VolatileEventStore();
+    }
+
+    @Bean
     public CommandBus customCommandBus() {
         return new CustomCommandBus();
     }
@@ -50,17 +55,9 @@ public class BasicTestWithCustomConfiguration {
         return new CustomEventBus();
     }
 
-    @Bean
-    public EventStore customEventStore() {
-        return new MyVolatileEventStore();
-    }
-
     private static class CustomCommandBus
             extends SimpleCommandBus {}
 
     private static class CustomEventBus
             extends SimpleEventBus {}
-
-    private static class MyVolatileEventStore
-            extends VolatileEventStore {}
 }

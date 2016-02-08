@@ -25,36 +25,25 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.basic;
+package hm.binkley.spring.axon.handlers;
 
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventhandling.SimpleEventBus;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import lombok.NoArgsConstructor;
+import org.axonframework.commandhandling.annotation.CommandHandler;
+import org.axonframework.eventsourcing.annotation
+        .AbstractAnnotatedAggregateRoot;
+import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
+import org.kohsuke.MetaInfServices;
 
-import static org.assertj.core.api.Assertions.assertThat;
+@MetaInfServices
+@NoArgsConstructor
+public class HandlersTestAggregateRoot
+        extends AbstractAnnotatedAggregateRoot<String> {
+    @AggregateIdentifier
+    private String id;
 
-@SpringApplicationConfiguration(
-        classes = BasicTestWithCustomConfiguration.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-public final class BasicIWithCustomT {
-    @Autowired
-    private CommandBus commandBus;
-    @Autowired
-    private EventBus eventBus;
-
-    @Test
-    public void shouldWireCustomCommandBus() {
-        assertThat(commandBus).isNotExactlyInstanceOf(SimpleCommandBus.class);
-    }
-
-    @Test
-    public void shouldWireCustomEventBus() {
-        assertThat(eventBus).isNotExactlyInstanceOf(SimpleEventBus.class);
+    @CommandHandler
+    public HandlersTestAggregateRoot(final TestCommand command) {
+        id = command.getId(); // TODO: Wonky?
+        apply(new TestEvent(command.getId()));
     }
 }

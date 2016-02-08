@@ -25,36 +25,37 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.basic;
+package hm.binkley.spring.axon.handlers;
 
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventhandling.SimpleEventBus;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import lombok.Getter;
+import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.eventstore.EventStore;
+import org.axonframework.eventstore.supporting.VolatileEventStore;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.ArrayList;
+import java.util.List;
 
-@SpringApplicationConfiguration(
-        classes = BasicTestWithCustomConfiguration.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-public final class BasicIWithCustomT {
-    @Autowired
-    private CommandBus commandBus;
-    @Autowired
-    private EventBus eventBus;
-
-    @Test
-    public void shouldWireCustomCommandBus() {
-        assertThat(commandBus).isNotExactlyInstanceOf(SimpleCommandBus.class);
+@Configuration
+@EnableAutoConfiguration
+public class HandlersTestConfiguration {
+    @Bean
+    public EventStore eventStore()
+            throws Exception {
+        return new VolatileEventStore();
     }
 
-    @Test
-    public void shouldWireCustomEventBus() {
-        assertThat(eventBus).isNotExactlyInstanceOf(SimpleEventBus.class);
+    @Component
+    @Getter
+    public static class EventCollector {
+        private final List<TestEvent> events = new ArrayList<>();
+
+        @EventHandler
+        public void on(final TestEvent event) {
+            events.add(event);
+        }
     }
 }

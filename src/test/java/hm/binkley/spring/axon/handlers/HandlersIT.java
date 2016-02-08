@@ -25,36 +25,62 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.basic;
+package hm.binkley.spring.axon.handlers;
 
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventhandling.SimpleEventBus;
+import hm.binkley.spring.axon.handlers.HandlersTestConfiguration
+        .EventCollector;
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.domain.DomainEventStream;
+import org.axonframework.eventstore.EventStore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringApplicationConfiguration(
-        classes = BasicTestWithCustomConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-public final class BasicIWithCustomT {
+@SpringApplicationConfiguration(classes = HandlersTestConfiguration.class)
+public final class HandlersIT {
     @Autowired
-    private CommandBus commandBus;
+    private CommandGateway commands;
     @Autowired
-    private EventBus eventBus;
+    private EventCollector eventCollector;
+    @Autowired
+    private EventStore eventStore;
 
-    @Test
-    public void shouldWireCustomCommandBus() {
-        assertThat(commandBus).isNotExactlyInstanceOf(SimpleCommandBus.class);
+    @Before
+    public void sendCommand() {
+        ;
     }
 
     @Test
-    public void shouldWireCustomEventBus() {
-        assertThat(eventBus).isNotExactlyInstanceOf(SimpleEventBus.class);
+    public void shouldWireEventStore() {
+        commands.send(new TestCommand("abc"));
+        assertThat(asAggregateIds(eventStore
+                .readEvents(HandlersTestAggregateRoot.class.getSimpleName(),
+                        "abc"))).
+                isEqualTo(singletonList(new TestEvent("abc")));
+    }
+
+    @Test
+    public void shouldFireHandlers() {
+        commands.send(new TestCommand("def"));
+        assertThat(eventCollector.getEvents()).
+                isEqualTo(singletonList(new TestEvent("def")));
+    }
+
+    private static List<TestEvent> asAggregateIds(
+            final DomainEventStream stream) {
+        final List<TestEvent> events = new ArrayList<>();
+        while (stream.hasNext())
+            events.add((TestEvent) stream.next().getPayload());
+        return events;
     }
 }

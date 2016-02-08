@@ -29,26 +29,32 @@ package hm.binkley.spring.axon;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.commandhandling.annotation.AnnotationCommandHandlerBeanPostProcessor;
+import org.axonframework.commandhandling.annotation
+        .AnnotationCommandHandlerBeanPostProcessor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.axonframework.domain.IdentifierFactory;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.SimpleEventBus;
-import org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPostProcessor;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
+import org.axonframework.eventhandling.annotation
+        .AnnotationEventListenerBeanPostProcessor;
+import org.axonframework.eventsourcing.annotation
+        .AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventstore.EventStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.boot.autoconfigure.condition
+        .ConditionalOnMissingBean;
+import org.springframework.context.annotation
+        .AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
 import static java.util.ServiceLoader.load;
+import static java.util.stream.StreamSupport.stream;
 
 /**
  * {@code AxonAutoConfiguration} autoconfigures Axon Framework for Spring
@@ -84,39 +90,34 @@ public class AxonAutoConfiguration {
         return new SimpleEventBus();
     }
 
-    @SuppressWarnings("MethodReturnOfConcreteClass")
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Bean
-    public EventSourcingRepositoryFactory eventSourcingRepositoryFactory(
+    public EventSourcingRepositoryRegistrar eventSourcingRepositoryRegistrar(
             final CommandBus commandBus, final EventBus eventBus,
             final EventStore eventStore) {
-        return new EventSourcingRepositoryFactory(commandBus, eventBus,
+        return new EventSourcingRepositoryRegistrar(commandBus, eventBus,
                 eventStore);
     }
 
     @PostConstruct
     public void registerRepositories() {
-        load(AbstractAnnotatedAggregateRoot.class).
-                forEach(root -> context.register(root.getClass()));
+        stream(load(AbstractAnnotatedAggregateRoot.class).spliterator(),
+                false).
+                map(Object::getClass).
+                distinct().
+                forEach(context::register);
     }
 
     @Bean
-    public AnnotationCommandHandlerBeanPostProcessor annotationCommandHandlerBeanPostProcessor(
-            final CommandBus commandBus) {
-        final AnnotationCommandHandlerBeanPostProcessor bean
-                = new AnnotationCommandHandlerBeanPostProcessor();
-        // TODO: Javadoc says this is auto-detected from Spring context
-        bean.setCommandBus(commandBus);
-        return bean;
+    public AnnotationCommandHandlerBeanPostProcessor
+    annotationCommandHandlerBeanPostProcessor() {
+        return new AnnotationCommandHandlerBeanPostProcessor();
     }
 
     @Bean
-    public AnnotationEventListenerBeanPostProcessor annotationEventListenerBeanPostProcessor(
-            final EventBus eventBus) {
-        final AnnotationEventListenerBeanPostProcessor bean
-                = new AnnotationEventListenerBeanPostProcessor();
-        // TODO: Javadoc says this is auto-detected from Spring context
-        bean.setEventBus(eventBus);
-        return bean;
+    public AnnotationEventListenerBeanPostProcessor
+    annotationEventListenerBeanPostProcessor() {
+        return new AnnotationEventListenerBeanPostProcessor();
     }
 
     /** @todo Javadoc says this is auto-detected from ServiceLoader */

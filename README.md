@@ -25,5 +25,9 @@ This project is heavily indebted to:
   implementations.  In particular, your configuration must define a bean for
   `EventStore`.
 * Autoconfigure aggregate root repositories marked with `@MetaInfServices`.
-  These generate entries in
+  The matching repository bean is the aggregate bean name appended with
+  "Repository".  These generate entries in
   `/META-INF/services/org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot`.
+  Note you *must* annotated injected repository fields with
+  `@Qualified(name-of-repostiroy)` because of limitations in Spring's support
+  for generics.

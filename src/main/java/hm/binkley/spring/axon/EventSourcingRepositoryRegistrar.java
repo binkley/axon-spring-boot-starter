@@ -38,18 +38,26 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config
+        .ConfigurableListableBeanFactory;
 
 import static java.lang.String.format;
-import static org.axonframework.commandhandling.annotation.AggregateAnnotationCommandHandler.subscribe;
+import static org.axonframework.commandhandling.annotation
+        .AggregateAnnotationCommandHandler.subscribe;
 
 @RequiredArgsConstructor
-public class EventSourcingRepositoryFactory
+public class EventSourcingRepositoryRegistrar
         implements BeanPostProcessor, BeanFactoryAware {
     private final CommandBus commandBus;
     private final EventBus eventBus;
     private final EventStore eventStore;
     private ConfigurableListableBeanFactory beanFactory;
+
+    @Override
+    public void setBeanFactory(final BeanFactory beanFactory)
+            throws BeansException {
+        this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
+    }
 
     @Override
     public Object postProcessBeforeInitialization(final Object bean,
@@ -59,7 +67,6 @@ public class EventSourcingRepositoryFactory
     }
 
     /** @todo Register an AggregateFactory rather than type token? */
-    @SuppressWarnings("unchecked")
     @Override
     public Object postProcessAfterInitialization(final Object bean,
             final String beanName)
@@ -78,11 +85,5 @@ public class EventSourcingRepositoryFactory
                 repository);
 
         return bean;
-    }
-
-    @Override
-    public void setBeanFactory(final BeanFactory beanFactory)
-            throws BeansException {
-        this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
     }
 }
