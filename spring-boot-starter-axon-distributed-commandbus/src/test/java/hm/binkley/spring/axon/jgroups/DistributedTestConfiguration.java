@@ -25,41 +25,20 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.distributed;
+package hm.binkley.spring.axon.jgroups;
 
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventstore.EventStore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.axonframework.eventstore.supporting.VolatileEventStore;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = DistributedTestConfiguration.class)
-public final class DistributedIT {
-    @Autowired
-    private CommandBus commandBus;
-    @Autowired
-    private EventBus eventBus;
-    @Autowired
-    private EventStore eventStore;
-
-    @Test
-    public void shouldWireCommandBus() {
-        assertThat(commandBus).isNotNull();
-    }
-
-    @Test
-    public void shouldWireEventBus() {
-        assertThat(eventBus).isNotNull();
-    }
-
-    @Test
-    public void shouldWireEventStore() {
-        assertThat(eventStore).isNotNull();
+@Configuration
+@EnableAutoConfiguration
+public class DistributedTestConfiguration {
+    @Bean
+    public EventStore eventStore()
+            throws Exception {
+        return new VolatileEventStore();
     }
 }

@@ -1,3 +1,7 @@
+axon:
+  jgroups:
+    cluster-name: test
+
 spring:
   main:
     show-banner: false

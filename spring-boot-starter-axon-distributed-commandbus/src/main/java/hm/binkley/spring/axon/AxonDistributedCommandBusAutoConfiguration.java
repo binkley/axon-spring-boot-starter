@@ -27,125 +27,103 @@
 
 package hm.binkley.spring.axon;
 
+import hm.binkley.spring.axon.AxonDistributedCommandBusAutoConfiguration
+        .AxonDistributedCommandBusProperties;
+import lombok.Getter;
+import lombok.Setter;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.commandhandling.annotation
-        .AnnotationCommandHandlerBeanPostProcessor;
-import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
-import org.axonframework.domain.IdentifierFactory;
-import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventhandling.SimpleEventBus;
-import org.axonframework.eventhandling.annotation
-        .AnnotationEventListenerBeanPostProcessor;
-import org.axonframework.eventsourcing.annotation
-        .AbstractAnnotatedAggregateRoot;
+import org.axonframework.commandhandling.distributed.DistributedCommandBus;
+import org.axonframework.commandhandling.distributed.jgroups.JGroupsConnector;
 import org.axonframework.eventstore.EventStore;
+import org.axonframework.serializer.Serializer;
+import org.axonframework.serializer.xml.XStreamSerializer;
+import org.jgroups.JChannel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition
         .ConditionalOnMissingBean;
-import org.springframework.context.annotation
-        .AnnotationConfigApplicationContext;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties
+        .EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.PostConstruct;
-
-import java.util.ServiceLoader;
-
-import static java.util.ServiceLoader.load;
-import static java.util.stream.StreamSupport.stream;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.Resource;
 
 /**
- * {@code AxonAutoConfiguration} autoconfigures Axon Framework for Spring
- * Boot.  Use {@link EnableAutoConfiguration} on your configuration class, and
- * define a bean for {@link EventStore}.
- * <p>
- * A minimal configuration is: <pre>   &#64;Configuration
- * &#64;EnableAutoConfiguration
- * public class AConfiguration {
- *     &#64;Bean
- *     public EventStore eventStore() {
- *         return ...;
- *     }
- * }</pre> In other classes inject Axon types
- * normally with {@code @Autowired}.  When injecting
- * repositories include the bean name: <pre>   &#64;Autowired
- * &#64;Qualifier("someAggregateRepository")
- * private Repository&lt;SomeAggregate&gt; repository;</pre>
- * For autoconfiguration to create the repository, mark your aggregate root
- * class with {@code @MetaInfServices} and extend {@link
- * AbstractAnnotatedAggregateRoot}:
- * <pre>   &#64;MetaInfServices
- * public class SomeAggregate
- *         extends AbstractAnnotatedAggregateRoot&lt;SomeIDType&gt;
- *     &#64;AggregateIdentifier
- *     private SomeIDType id;
- * }</pre>  Autoconfigurating repositories uses standard {@link ServiceLoader}
- * to discover aggregate root classes.
+ * {@code AxonDistributedCommandBusAutoConfiguration} autoconfigures Axon
+ * Framework for Spring Boot with a distributed command bus using JGroups. Use
+ * {@link EnableAutoConfiguration} on your configuration class, and define a
+ * bean for {@link EventStore} (see {@link AxonAutoConfiguration} for
+ * details).  Then define application properties for JGroups: <pre>   axon:
+ *   jgroups:
+ *     cluster-name: <i>test</i>
+ *     configuration: <i>classpath:/my-config.xml</i>  # Optional</pre>
+ * Autoconfiguration defaults to XML serialization for JGroups.
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
+ * @see AxonAutoConfiguration
  */
+@AutoConfigureBefore(AxonAutoConfiguration.class)
 @Configuration
 @ConditionalOnClass(CommandBus.class)
+@EnableConfigurationProperties(
+        AxonDistributedCommandBusProperties.class)
 public class AxonDistributedCommandBusAutoConfiguration {
     @Autowired
-    private AnnotationConfigApplicationContext context;
+    private AxonDistributedCommandBusProperties properties;
 
     @Bean
     @ConditionalOnMissingBean
-    public CommandBus commandBus() {
+    public JChannel jChannel()
+            throws Exception {
+        final Resource configuration = properties.getConfiguration();
+        return null == configuration ? new JChannel()
+                : new JChannel(configuration.getFile());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CommandBus localSegmentCommandBus() {
         return new SimpleCommandBus();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public CommandGateway commandGateway(final CommandBus commandBus) {
-        return new DefaultCommandGateway(commandBus);
+    public Serializer serializer() {
+        return new XStreamSerializer();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public EventBus eventBus() {
-        return new SimpleEventBus();
+    public JGroupsConnector jGroupsConnector(final JChannel channel,
+            @Qualifier("localSegmentCommandBus") final CommandBus commandBus,
+            final Serializer serializer) {
+        return new JGroupsConnector(channel, properties.getClusterName(),
+                commandBus, serializer);
     }
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Bean
-    public EventSourcingRepositoryRegistrar eventSourcingRepositoryRegistrar(
-            final CommandBus commandBus, final EventBus eventBus,
-            final EventStore eventStore) {
-        return new EventSourcingRepositoryRegistrar(commandBus, eventBus,
-                eventStore);
-    }
-
-    @PostConstruct
-    public void registerRepositories() {
-        stream(load(AbstractAnnotatedAggregateRoot.class).spliterator(),
-                false).
-                map(Object::getClass).
-                distinct().
-                forEach(context::register);
-    }
-
-    @Bean
-    public AnnotationCommandHandlerBeanPostProcessor
-    annotationCommandHandlerBeanPostProcessor() {
-        return new AnnotationCommandHandlerBeanPostProcessor();
-    }
-
-    @Bean
-    public AnnotationEventListenerBeanPostProcessor
-    annotationEventListenerBeanPostProcessor() {
-        return new AnnotationEventListenerBeanPostProcessor();
-    }
-
-    /** @todo Javadoc says this is auto-detected from ServiceLoader */
     @Bean
     @ConditionalOnMissingBean
-    public IdentifierFactory identifierFactory() {
-        return IdentifierFactory.getInstance();
+    @Primary
+    public DistributedCommandBus distributedCommandBus(
+            final JGroupsConnector connector) {
+        return new DistributedCommandBus(connector);
+    }
+
+    @ConfigurationProperties("axon.jgroups")
+    @Getter
+    @Setter
+    public static class AxonDistributedCommandBusProperties {
+        /** The JGroups cluster name. */
+        private String clusterName;
+        /**
+         * The Spring resource path to JGroups XML configuration, optioanl.
+         */
+        private Resource configuration;
     }
 }
