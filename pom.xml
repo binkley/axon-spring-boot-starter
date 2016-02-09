@@ -61,6 +61,7 @@
 
     <modules>
         <module>spring-boot-starter-axon</module>
+        <module>spring-boot-starter-axon-distributed-commandbus</module>
     </modules>
 
     <properties>
@@ -74,6 +75,7 @@
         <java.version>1.8</java.version>
         <jdeps.verbose>false</jdeps.verbose>
         <jgitflow-maven-plugin.version>1.0-m5.1</jgitflow-maven-plugin.version>
+        <jgroups.version>3.6.7.Final</jgroups.version>
         <junit.version>4.12</junit.version>
         <lombok.version>1.16.6</lombok.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -98,6 +100,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>spring-boot-starter-axon</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-core</artifactId>
                 <version>${axon.version}</version>
@@ -112,6 +119,16 @@
                 <artifactId>axon-monitoring-jmx</artifactId>
                 <version>${axon.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.axonframework</groupId>
+                <artifactId>axon-distributed-commandbus</artifactId>
+                <version>${axon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jgroups</groupId>
+                <artifactId>jgroups</artifactId>
+                <version>${jgroups.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
