@@ -33,6 +33,7 @@ This project is heavily indebted to:
   Note you *must* annotate injected repository fields with
   `@Qualified(name-of-repostiroy)` because of limitations in Spring's support
   for generics.
+* Autoconfiguration for JGroups distributed command bus.
 
 ## Minimal Example
 
@@ -70,6 +71,12 @@ public class SomeClassUsingRespository {
 ```
 
 ## Releases
+
+### 1
+
+* Break project into multi-module reactor build.  Separate axon starters in
+  separate modules.
+* Support JGroups distriuted command bus.
 
 ### 0
 
