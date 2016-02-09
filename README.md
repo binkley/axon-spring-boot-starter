@@ -76,6 +76,7 @@ public class SomeClassUsingRespository {
 
 * Break project into multi-module reactor build.  Separate axon starters in
   separate modules.
+* Support JGroups distriuted command bus.
 
 ### 0
 
