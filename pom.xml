@@ -75,14 +75,13 @@
         <jgroups.version>3.6.7.Final</jgroups.version>
         <junit.version>4.12</junit.version>
         <lombok.version>1.16.6</lombok.version>
-        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
         <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
-        <maven-failsafe-plugin.version>2.16</maven-failsafe-plugin.version>
         <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
         <maven-source-plugin.version>2.4</maven-source-plugin.version>
-        <maven-surefire.version>2.18.1</maven-surefire.version>
+        <maven-surefire.version>2.19.1</maven-surefire.version>
         <metainf-services.version>1.7</metainf-services.version>
         <persistence-api.version>1.0.2</persistence-api.version>
         <project.build.outputEncoding>${java.charset}</project.build.outputEncoding>
@@ -315,6 +314,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <!-- Failsafe and surefire share same code base -->
                 <version>${maven-surefire.version}</version>
                 <executions>
                     <execution>
