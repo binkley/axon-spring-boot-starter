@@ -72,6 +72,12 @@ public class SomeClassUsingRespository {
 
 ## Releases
 
+### 2
+
+* Renamed project and modules to meet Spring Boot 3rd-party naming guidelines.
+  So spring-boot-axon-starter becomes axon-spring-boot-starter.  Apologies
+  committers and cloners.  Better now than later.
+
 ### 1
 
 * Break project into multi-module reactor build.  Separate axon starters in
