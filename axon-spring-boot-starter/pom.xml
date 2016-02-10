@@ -4,30 +4,31 @@
 
     <parent>
         <groupId>hm.binkley</groupId>
-        <artifactId>spring-boot-starter-axon-parent</artifactId>
-        <version>1</version>
+        <artifactId>axon-spring-boot-starter-parent</artifactId>
+        <version>2</version>
     </parent>
 
-    <artifactId>spring-boot-starter-axon-distributed-commandbus</artifactId>
+    <artifactId>axon-spring-boot-starter</artifactId>
 
-    <name>Spring Boot/Axon Starter - Distributed Command Bus</name>
+    <name>Spring Boot/Axon Starter - Basic Functionality</name>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>spring-boot-starter-axon</artifactId>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
-            <artifactId>axon-distributed-commandbus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jgroups</groupId>
-            <artifactId>jgroups</artifactId>
+            <artifactId>axon-monitoring-jmx</artifactId>
         </dependency>
     </dependencies>
 </project>
