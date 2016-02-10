@@ -73,13 +73,14 @@ public class AxonQueryConfiguration {
 
     @PostConstruct
     public void registerRepositories() {
-        final Set<? extends Class<?>> roots = stream(
+        final Set<String> roots = stream(
                 load(AbstractAnnotatedAggregateRoot.class).spliterator(),
                 false).
                 map(Object::getClass).
+                map(Class::getName).
                 collect(toSet());
         if (!roots.isEmpty())
-            throw new IllegalArgumentException(
+            throw new IllegalStateException(
                     "Aggregate roots found in META-INF/services.  Did you "
                             + "mean to use axon-spring-boot-starter instead"
                             + " of axon-spring-boot-starter-query? " + roots);
