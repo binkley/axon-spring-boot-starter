@@ -298,6 +298,7 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-parameters</arg>
+                        <arg>-Werror</arg>
                     </compilerArgs>
                     <debug>true</debug>
                     <source>${java.version}</source>
