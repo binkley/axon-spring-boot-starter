@@ -9,7 +9,7 @@
     </parent>
 
     <groupId>hm.binkley</groupId>
-    <artifactId>spring-boot-starter-axon-parent</artifactId>
+    <artifactId>axon-spring-boot-starter-parent</artifactId>
     <version>2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -57,8 +57,8 @@
     </scm>
 
     <modules>
-        <module>spring-boot-starter-axon</module>
-        <module>spring-boot-starter-axon-distributed-commandbus</module>
+        <module>axon-spring-boot-starter</module>
+        <module>axon-spring-boot-starter-distributed-commandbus</module>
     </modules>
 
     <properties>
@@ -98,7 +98,7 @@
         <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>spring-boot-starter-axon</artifactId>
+                <artifactId>axon-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

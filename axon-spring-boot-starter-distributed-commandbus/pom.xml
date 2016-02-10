@@ -4,11 +4,11 @@
 
     <parent>
         <groupId>hm.binkley</groupId>
-        <artifactId>spring-boot-starter-axon-parent</artifactId>
+        <artifactId>axon-spring-boot-starter-parent</artifactId>
         <version>2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>spring-boot-starter-axon-distributed-commandbus</artifactId>
+    <artifactId>axon-spring-boot-starter-distributed-commandbus</artifactId>
 
     <name>Spring Boot/Axon Starter - Distributed Command Bus</name>
 
@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>spring-boot-starter-axon</artifactId>
+            <artifactId>axon-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
