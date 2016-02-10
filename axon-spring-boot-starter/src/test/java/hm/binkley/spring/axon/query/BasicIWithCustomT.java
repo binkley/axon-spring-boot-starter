@@ -25,7 +25,7 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.basic;
+package hm.binkley.spring.axon.query;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
@@ -40,7 +40,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringApplicationConfiguration(
-        classes = BasicTestWithCustomConfiguration.class)
+        classes = BasicWithCustomTestConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public final class BasicIWithCustomT {
     @Autowired

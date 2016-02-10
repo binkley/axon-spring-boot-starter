@@ -58,6 +58,7 @@
 
     <modules>
         <module>axon-spring-boot-starter</module>
+        <module>axon-spring-boot-starter-query</module>
         <module>axon-spring-boot-starter-distributed-commandbus</module>
     </modules>
 

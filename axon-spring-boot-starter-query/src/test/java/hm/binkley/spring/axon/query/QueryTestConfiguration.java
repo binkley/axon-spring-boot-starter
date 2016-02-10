@@ -25,39 +25,20 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.basic;
+package hm.binkley.spring.axon.query;
 
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventhandling.SimpleEventBus;
+import hm.binkley.spring.axon.EnableAxonQuery;
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.supporting.VolatileEventStore;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableAutoConfiguration
-public class BasicTestWithCustomConfiguration {
+@EnableAxonQuery
+public class QueryTestConfiguration {
     @Bean
-    public EventStore eventStore() {
+    public EventStore eventStore()
+            throws Exception {
         return new VolatileEventStore();
     }
-
-    @Bean
-    public CommandBus customCommandBus() {
-        return new CustomCommandBus();
-    }
-
-    @Bean
-    public EventBus customEventBus() {
-        return new CustomEventBus();
-    }
-
-    private static class CustomCommandBus
-            extends SimpleCommandBus {}
-
-    private static class CustomEventBus
-            extends SimpleEventBus {}
 }

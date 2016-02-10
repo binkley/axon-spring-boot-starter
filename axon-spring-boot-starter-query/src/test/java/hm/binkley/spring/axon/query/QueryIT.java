@@ -25,11 +25,9 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.basic;
+package hm.binkley.spring.axon.query;
 
-import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventstore.EventStore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,27 +37,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = BasicTestConfiguration.class)
-public final class BasicIT {
-    @Autowired
-    private CommandBus commandBus;
+@SpringApplicationConfiguration(classes = QueryTestConfiguration.class)
+public final class QueryIT {
     @Autowired
     private EventBus eventBus;
-    @Autowired
-    private EventStore eventStore;
-
-    @Test
-    public void shouldWireCommandBus() {
-        assertThat(commandBus).isNotNull();
-    }
 
     @Test
     public void shouldWireEventBus() {
         assertThat(eventBus).isNotNull();
-    }
-
-    @Test
-    public void shouldWireEventStore() {
-        assertThat(eventStore).isNotNull();
     }
 }
