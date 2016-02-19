@@ -57,6 +57,7 @@
     </scm>
 
     <modules>
+        <module>axon-spring-boot-testing</module>
         <module>axon-spring-boot-starter</module>
         <module>axon-spring-boot-starter-query</module>
         <module>axon-spring-boot-starter-distributed-commandbus</module>
@@ -96,6 +97,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>axon-spring-boot-testing</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>axon-spring-boot-starter</artifactId>

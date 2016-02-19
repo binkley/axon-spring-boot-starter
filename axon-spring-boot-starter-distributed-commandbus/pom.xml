@@ -29,5 +29,9 @@
             <groupId>org.jgroups</groupId>
             <artifactId>jgroups</artifactId>
         </dependency>
+        <dependency>
+            <groupId>hm.binkley</groupId>
+            <artifactId>axon-spring-boot-testing</artifactId>
+        </dependency>
     </dependencies>
 </project>

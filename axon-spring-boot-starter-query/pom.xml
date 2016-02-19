@@ -26,5 +26,9 @@
             <groupId>org.axonframework</groupId>
             <artifactId>axon-monitoring-jmx</artifactId>
         </dependency>
+        <dependency>
+            <groupId>hm.binkley</groupId>
+            <artifactId>axon-spring-boot-testing</artifactId>
+        </dependency>
     </dependencies>
 </project>
