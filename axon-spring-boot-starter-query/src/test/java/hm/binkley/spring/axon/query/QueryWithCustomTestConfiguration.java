@@ -27,14 +27,12 @@
 
 package hm.binkley.spring.axon.query;
 
-import hm.binkley.spring.axon.EnableAxonQuery;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.SimpleEventBus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableAxonQuery
 public class QueryWithCustomTestConfiguration {
     @Bean
     public EventBus customEventBus() {

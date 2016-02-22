@@ -72,6 +72,10 @@ public class SomeClassUsingRespository {
 
 ## Releases
 
+### 3
+
+* Read-side (query) uses autoconfiguration as well as write-side.
+
 ### 2
 
 * Renamed project and modules to meet Spring Boot 3rd-party naming guidelines.
