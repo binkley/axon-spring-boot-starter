@@ -27,26 +27,9 @@
 
 package hm.binkley.spring.axon.query;
 
-import hm.binkley.spring.axon.query.QueryWithCustomTestConfiguration
-        .CustomEventBus;
-import org.axonframework.eventhandling.EventBus;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Configuration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-@SpringApplicationConfiguration(
-        classes = QueryWithCustomTestConfiguration.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-public final class QueryIWithCustomT {
-    @Autowired
-    private EventBus eventBus;
-
-    @Test
-    public void shouldWireCustomEventBus() {
-        assertThat(eventBus).isInstanceOf(CustomEventBus.class);
-    }
-}
+@Configuration
+@EnableAutoConfiguration
+public class ClusterTestConfiguration {}

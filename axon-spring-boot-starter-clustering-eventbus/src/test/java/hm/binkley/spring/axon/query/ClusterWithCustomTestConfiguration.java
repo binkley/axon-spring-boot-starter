@@ -27,26 +27,28 @@
 
 package hm.binkley.spring.axon.query;
 
-import hm.binkley.spring.axon.query.QueryWithCustomTestConfiguration
-        .CustomEventBus;
+import org.axonframework.eventhandling.ClusterSelector;
+import org.axonframework.eventhandling.ClusteringEventBus;
 import org.axonframework.eventhandling.EventBus;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.axonframework.eventhandling.EventBusTerminal;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import static org.assertj.core.api.Assertions.assertThat;
+@Configuration
+@EnableAutoConfiguration
+public class ClusterWithCustomTestConfiguration {
+    @Bean
+    public EventBus customClusterEventBus(final ClusterSelector selector,
+            final EventBusTerminal terminal) {
+        return new CustomClusteringEventBus(selector, terminal);
+    }
 
-@SpringApplicationConfiguration(
-        classes = QueryWithCustomTestConfiguration.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-public final class QueryIWithCustomT {
-    @Autowired
-    private EventBus eventBus;
-
-    @Test
-    public void shouldWireCustomEventBus() {
-        assertThat(eventBus).isInstanceOf(CustomEventBus.class);
+    static final class CustomClusteringEventBus
+            extends ClusteringEventBus {
+        CustomClusteringEventBus(final ClusterSelector selector,
+                final EventBusTerminal terminal) {
+            super(selector, terminal);
+        }
     }
 }

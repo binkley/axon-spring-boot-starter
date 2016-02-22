@@ -48,8 +48,8 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
  */
-@Configuration
 @ConditionalOnClass(EventBus.class)
+@Configuration
 public class AxonQueryAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean

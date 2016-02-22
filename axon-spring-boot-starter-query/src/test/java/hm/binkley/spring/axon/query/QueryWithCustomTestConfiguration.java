@@ -39,6 +39,6 @@ public class QueryWithCustomTestConfiguration {
         return new CustomEventBus();
     }
 
-    private static class CustomEventBus
+    static final class CustomEventBus
             extends SimpleEventBus {}
 }

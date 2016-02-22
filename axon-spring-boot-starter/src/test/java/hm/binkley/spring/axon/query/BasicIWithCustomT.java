@@ -27,10 +27,12 @@
 
 package hm.binkley.spring.axon.query;
 
+import hm.binkley.spring.axon.query.BasicWithCustomTestConfiguration
+        .CustomCommandBus;
+import hm.binkley.spring.axon.query.BasicWithCustomTestConfiguration
+        .CustomEventBus;
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventhandling.SimpleEventBus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,11 +52,11 @@ public final class BasicIWithCustomT {
 
     @Test
     public void shouldWireCustomCommandBus() {
-        assertThat(commandBus).isNotExactlyInstanceOf(SimpleCommandBus.class);
+        assertThat(commandBus).isInstanceOf(CustomCommandBus.class);
     }
 
     @Test
     public void shouldWireCustomEventBus() {
-        assertThat(eventBus).isNotExactlyInstanceOf(SimpleEventBus.class);
+        assertThat(eventBus).isInstanceOf(CustomEventBus.class);
     }
 }

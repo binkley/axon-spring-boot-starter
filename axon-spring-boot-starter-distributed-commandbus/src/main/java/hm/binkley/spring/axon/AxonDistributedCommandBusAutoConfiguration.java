@@ -69,10 +69,9 @@ import org.springframework.core.io.Resource;
  * @see AxonAutoConfiguration
  */
 @AutoConfigureBefore(AxonAutoConfiguration.class)
-@Configuration
 @ConditionalOnClass(CommandBus.class)
-@EnableConfigurationProperties(
-        AxonDistributedCommandBusProperties.class)
+@Configuration
+@EnableConfigurationProperties(AxonDistributedCommandBusProperties.class)
 public class AxonDistributedCommandBusAutoConfiguration {
     @Autowired
     private AxonDistributedCommandBusProperties properties;

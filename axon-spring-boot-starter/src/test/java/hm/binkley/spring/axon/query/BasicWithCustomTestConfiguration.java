@@ -55,9 +55,9 @@ public class BasicWithCustomTestConfiguration {
         return new CustomEventBus();
     }
 
-    private static class CustomCommandBus
+    static final class CustomCommandBus
             extends SimpleCommandBus {}
 
-    private static class CustomEventBus
+    static final class CustomEventBus
             extends SimpleEventBus {}
 }
