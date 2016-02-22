@@ -105,6 +105,11 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>axon-spring-boot-starter-query</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>axon-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>

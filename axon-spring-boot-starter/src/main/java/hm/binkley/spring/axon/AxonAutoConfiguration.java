@@ -29,30 +29,22 @@ package hm.binkley.spring.axon;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.commandhandling.annotation
-        .AnnotationCommandHandlerBeanPostProcessor;
+import org.axonframework.commandhandling.annotation.AnnotationCommandHandlerBeanPostProcessor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.axonframework.domain.IdentifierFactory;
 import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventhandling.SimpleEventBus;
-import org.axonframework.eventhandling.annotation
-        .AnnotationEventListenerBeanPostProcessor;
-import org.axonframework.eventsourcing.annotation
-        .AbstractAnnotatedAggregateRoot;
+import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventstore.EventStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition
-        .ConditionalOnMissingBean;
-import org.springframework.context.annotation
-        .AnnotationConfigApplicationContext;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
-
 import java.util.ServiceLoader;
 
 import static java.util.ServiceLoader.load;
@@ -106,12 +98,6 @@ public class AxonAutoConfiguration {
         return new DefaultCommandGateway(commandBus);
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public EventBus eventBus() {
-        return new SimpleEventBus();
-    }
-
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Bean
     public EventSourcingRepositoryRegistrar eventSourcingRepositoryRegistrar(
@@ -134,12 +120,6 @@ public class AxonAutoConfiguration {
     public AnnotationCommandHandlerBeanPostProcessor
     annotationCommandHandlerBeanPostProcessor() {
         return new AnnotationCommandHandlerBeanPostProcessor();
-    }
-
-    @Bean
-    public AnnotationEventListenerBeanPostProcessor
-    annotationEventListenerBeanPostProcessor() {
-        return new AnnotationEventListenerBeanPostProcessor();
     }
 
     /** @todo Javadoc says this is auto-detected from ServiceLoader */
