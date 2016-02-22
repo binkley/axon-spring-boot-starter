@@ -5,7 +5,7 @@
     <parent>
         <groupId>hm.binkley</groupId>
         <artifactId>axon-spring-boot-starter-parent</artifactId>
-        <version>4-SNAPSHOT</version>
+        <version>3</version>
     </parent>
 
     <artifactId>axon-spring-boot-testing</artifactId>
