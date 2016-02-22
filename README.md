@@ -75,6 +75,7 @@ public class SomeClassUsingRespository {
 ### 3
 
 * Read-side (query) uses autoconfiguration as well as write-side.
+* Clustering event bus starter.
 
 ### 2
 
