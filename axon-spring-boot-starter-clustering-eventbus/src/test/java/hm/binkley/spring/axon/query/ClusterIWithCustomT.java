@@ -25,19 +25,28 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.jgroups;
+package hm.binkley.spring.axon.query;
 
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.eventstore.supporting.VolatileEventStore;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import hm.binkley.spring.axon.query.ClusterWithCustomTestConfiguration
+        .CustomClusteringEventBus;
+import org.axonframework.eventhandling.EventBus;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@Configuration
-@EnableAutoConfiguration
-public class DistributedTestConfiguration {
-    @Bean
-    public EventStore eventStore() {
-        return new VolatileEventStore();
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringApplicationConfiguration(
+        classes = ClusterWithCustomTestConfiguration.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+public final class ClusterIWithCustomT {
+    @Autowired
+    private EventBus eventBus;
+
+    @Test
+    public void shouldWireCustomEventBus() {
+        assertThat(eventBus).isInstanceOf(CustomClusteringEventBus.class);
     }
 }

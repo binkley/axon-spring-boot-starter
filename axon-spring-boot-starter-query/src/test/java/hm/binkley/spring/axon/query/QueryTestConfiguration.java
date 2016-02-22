@@ -25,7 +25,7 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.jgroups;
+package hm.binkley.spring.axon.query;
 
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.supporting.VolatileEventStore;
@@ -35,7 +35,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableAutoConfiguration
-public class DistributedTestConfiguration {
+public class QueryTestConfiguration {
     @Bean
     public EventStore eventStore() {
         return new VolatileEventStore();

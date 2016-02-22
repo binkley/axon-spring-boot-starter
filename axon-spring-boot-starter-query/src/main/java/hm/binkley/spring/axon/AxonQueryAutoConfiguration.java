@@ -25,19 +25,41 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.jgroups;
+package hm.binkley.spring.axon;
 
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.eventstore.supporting.VolatileEventStore;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.axonframework.eventhandling.EventBus;
+import org.axonframework.eventhandling.SimpleEventBus;
+import org.axonframework.eventhandling.annotation
+        .AnnotationEventListenerBeanPostProcessor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition
+        .ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * {@code AxonQueryAutoConfiguration} autoconfigures Axon Framework for Spring
+ * Boot but only for query (read side).
+ * <p>
+ * A minimal configuration is: <pre>   &#64;Configuration
+ * &#64;EnableAutoConfiguration
+ * public class AConfiguration {}</pre> In other classes inject Axon types
+ * normally with {@code @Autowired}.
+ *
+ * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
+ */
+@ConditionalOnClass(EventBus.class)
 @Configuration
-@EnableAutoConfiguration
-public class DistributedTestConfiguration {
+public class AxonQueryAutoConfiguration {
     @Bean
-    public EventStore eventStore() {
-        return new VolatileEventStore();
+    @ConditionalOnMissingBean
+    public EventBus eventBus() {
+        return new SimpleEventBus();
+    }
+
+    @Bean
+    public AnnotationEventListenerBeanPostProcessor
+    annotationEventListenerBeanPostProcessor() {
+        return new AnnotationEventListenerBeanPostProcessor();
     }
 }

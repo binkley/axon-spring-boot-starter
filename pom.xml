@@ -10,7 +10,7 @@
 
     <groupId>hm.binkley</groupId>
     <artifactId>axon-spring-boot-starter-parent</artifactId>
-    <version>2</version>
+    <version>3</version>
     <packaging>pom</packaging>
 
     <name>Spring Boot/Axon Starter - Parent</name>
@@ -57,6 +57,9 @@
     </scm>
 
     <modules>
+        <module>axon-spring-boot-testing</module>
+        <module>axon-spring-boot-starter-query</module>
+        <module>axon-spring-boot-starter-clustering-eventbus</module>
         <module>axon-spring-boot-starter</module>
         <module>axon-spring-boot-starter-distributed-commandbus</module>
     </modules>
@@ -67,35 +70,45 @@
         <axon.version>2.4.3</axon.version>
         <buildplan-maven-plugin.version>1.2</buildplan-maven-plugin.version>
         <extra-enforcer-rules.version>1.0-beta-4</extra-enforcer-rules.version>
+        <failsafe.printSummary>false</failsafe.printSummary>
         <generateBackupPoms>false</generateBackupPoms>
         <java.charset>UTF-8</java.charset>
         <java.version>1.8</java.version>
-        <jdeps.verbose>false</jdeps.verbose>
         <jgitflow-maven-plugin.version>1.0-m5.1</jgitflow-maven-plugin.version>
         <jgroups.version>3.6.7.Final</jgroups.version>
         <junit.version>4.12</junit.version>
         <lombok.version>1.16.6</lombok.version>
-        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
         <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
-        <maven-failsafe-plugin.version>2.16</maven-failsafe-plugin.version>
         <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
-        <maven-jdeps-plugin.version>3.0.0</maven-jdeps-plugin.version>
         <maven-source-plugin.version>2.4</maven-source-plugin.version>
-        <maven-surefire.version>2.18.1</maven-surefire.version>
+        <maven-surefire.version>2.19.1</maven-surefire.version>
         <metainf-services.version>1.7</metainf-services.version>
         <persistence-api.version>1.0.2</persistence-api.version>
         <project.build.outputEncoding>${java.charset}</project.build.outputEncoding>
         <project.build.sourceEncoding>${java.charset}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${java.charset}</project.reporting.outputEncoding>
         <project.reporting.sourceEncoding>${java.charset}</project.reporting.sourceEncoding>
+        <surefire.printSummary>false</surefire.printSummary>
         <versions-maven-plugin.version>2.2</versions-maven-plugin.version>
         <!-- @formatter:on -->
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>axon-spring-boot-testing</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>axon-spring-boot-starter-query</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>axon-spring-boot-starter</artifactId>
@@ -300,6 +313,7 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-parameters</arg>
+                        <arg>-Werror</arg>
                     </compilerArgs>
                     <debug>true</debug>
                     <source>${java.version}</source>
@@ -307,27 +321,15 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-jdeps-plugin</artifactId>
-                <version>${maven-jdeps-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jdkinternals</goal>
-                            <goal>test-jdkinternals</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire.version}</version>
                 <configuration>
-                    <printSummary>false</printSummary>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <!-- Failsafe and surefire share same code base -->
                 <version>${maven-surefire.version}</version>
                 <executions>
                     <execution>

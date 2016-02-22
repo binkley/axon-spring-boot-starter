@@ -25,39 +25,26 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.basic;
+package hm.binkley.spring.axon.query;
 
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.SimpleCommandBus;
+import org.axonframework.eventhandling.ClusteringEventBus;
 import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventhandling.SimpleEventBus;
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.eventstore.supporting.VolatileEventStore;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@Configuration
-@EnableAutoConfiguration
-public class BasicTestWithCustomConfiguration {
-    @Bean
-    public EventStore eventStore() {
-        return new VolatileEventStore();
+import static org.assertj.core.api.Assertions.assertThat;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = ClusterTestConfiguration.class)
+public final class ClusterIT {
+    @Autowired
+    private EventBus eventBus;
+
+    @Test
+    public void shouldWireClusteringEventBus() {
+        assertThat(eventBus).isInstanceOf(ClusteringEventBus.class);
     }
-
-    @Bean
-    public CommandBus customCommandBus() {
-        return new CustomCommandBus();
-    }
-
-    @Bean
-    public EventBus customEventBus() {
-        return new CustomEventBus();
-    }
-
-    private static class CustomCommandBus
-            extends SimpleCommandBus {}
-
-    private static class CustomEventBus
-            extends SimpleEventBus {}
 }

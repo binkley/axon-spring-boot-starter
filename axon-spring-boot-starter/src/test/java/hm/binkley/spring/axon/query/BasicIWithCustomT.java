@@ -25,20 +25,38 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.basic;
+package hm.binkley.spring.axon.query;
 
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.eventstore.supporting.VolatileEventStore;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import hm.binkley.spring.axon.query.BasicWithCustomTestConfiguration
+        .CustomCommandBus;
+import hm.binkley.spring.axon.query.BasicWithCustomTestConfiguration
+        .CustomEventBus;
+import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.eventhandling.EventBus;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@Configuration
-@EnableAutoConfiguration
-public class BasicTestConfiguration {
-    @Bean
-    public EventStore eventStore()
-            throws Exception {
-        return new VolatileEventStore();
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringApplicationConfiguration(
+        classes = BasicWithCustomTestConfiguration.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+public final class BasicIWithCustomT {
+    @Autowired
+    private CommandBus commandBus;
+    @Autowired
+    private EventBus eventBus;
+
+    @Test
+    public void shouldWireCustomCommandBus() {
+        assertThat(commandBus).isInstanceOf(CustomCommandBus.class);
+    }
+
+    @Test
+    public void shouldWireCustomEventBus() {
+        assertThat(eventBus).isInstanceOf(CustomEventBus.class);
     }
 }

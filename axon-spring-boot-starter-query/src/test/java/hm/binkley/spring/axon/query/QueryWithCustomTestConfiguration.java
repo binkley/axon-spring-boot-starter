@@ -25,19 +25,20 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.jgroups;
+package hm.binkley.spring.axon.query;
 
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.eventstore.supporting.VolatileEventStore;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.axonframework.eventhandling.EventBus;
+import org.axonframework.eventhandling.SimpleEventBus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableAutoConfiguration
-public class DistributedTestConfiguration {
+public class QueryWithCustomTestConfiguration {
     @Bean
-    public EventStore eventStore() {
-        return new VolatileEventStore();
+    public EventBus customEventBus() {
+        return new CustomEventBus();
     }
+
+    static final class CustomEventBus
+            extends SimpleEventBus {}
 }

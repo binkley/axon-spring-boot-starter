@@ -25,12 +25,11 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.basic;
+package hm.binkley.spring.axon.query;
 
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.SimpleCommandBus;
+import hm.binkley.spring.axon.query.QueryWithCustomTestConfiguration
+        .CustomEventBus;
 import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventhandling.SimpleEventBus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,21 +39,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringApplicationConfiguration(
-        classes = BasicTestWithCustomConfiguration.class)
+        classes = QueryWithCustomTestConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-public final class BasicIWithCustomT {
-    @Autowired
-    private CommandBus commandBus;
+public final class QueryIWithCustomT {
     @Autowired
     private EventBus eventBus;
 
     @Test
-    public void shouldWireCustomCommandBus() {
-        assertThat(commandBus).isNotExactlyInstanceOf(SimpleCommandBus.class);
-    }
-
-    @Test
     public void shouldWireCustomEventBus() {
-        assertThat(eventBus).isNotExactlyInstanceOf(SimpleEventBus.class);
+        assertThat(eventBus).isInstanceOf(CustomEventBus.class);
     }
 }
