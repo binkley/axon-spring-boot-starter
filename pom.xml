@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -56,6 +59,19 @@
         <url>https://github.com/binkley/spring-boot-starter-axon</url>
     </scm>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>
+                https://oss.sonatype.org/service/local/staging/deploy/maven2
+            </url>
+        </repository>
+    </distributionManagement>
+
     <modules>
         <module>axon-spring-boot-testing</module>
         <module>axon-spring-boot-starter-query</module>
@@ -86,7 +102,9 @@
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
         <maven-source-plugin.version>2.4</maven-source-plugin.version>
         <maven-surefire.version>2.19.1</maven-surefire.version>
+        <mdep.analyze.skip>true</mdep.analyze.skip>
         <metainf-services.version>1.7</metainf-services.version>
+        <nexus-staging-maven-plugin.version>1.6.6</nexus-staging-maven-plugin.version>
         <persistence-api.version>1.0.2</persistence-api.version>
         <project.build.outputEncoding>${java.charset}</project.build.outputEncoding>
         <project.build.sourceEncoding>${java.charset}</project.build.sourceEncoding>
@@ -221,7 +239,7 @@
                         <id>enforce</id>
                         <configuration>
                             <rules>
-                                <banCircularDependencies />
+                                <banCircularDependencies/>
                                 <banDuplicateClasses>
                                     <findAllDuplicates>true
                                     </findAllDuplicates>
@@ -242,7 +260,7 @@
                                     <maxJdkVersion>${java.version}
                                     </maxJdkVersion>
                                 </enforceBytecodeVersion>
-                                <reactorModuleConvergence />
+                                <reactorModuleConvergence/>
                                 <requireJavaVersion>
                                     <version>${java.version}</version>
                                 </requireJavaVersion>
@@ -305,9 +323,10 @@
                     <execution>
                         <id>analyze-or-die</id>
                         <phase>verify</phase>
-                        <!--<configuration>-->
-                        <!--<failOnWarning>true</failOnWarning>-->
-                        <!--</configuration>-->
+                        <configuration>
+                            <failOnWarning>true</failOnWarning>
+                            <ignoreNonCompile>true</ignoreNonCompile>
+                        </configuration>
                         <goals>
                             <goal>analyze</goal>
                         </goals>
@@ -417,6 +436,17 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${nexus-staging-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
             </plugin>
         </plugins>
     </build>
