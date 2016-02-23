@@ -72,6 +72,10 @@ public class SomeClassUsingRespository {
 
 ## Releases
 
+### 4
+
+* Event processing monitor automation.
+
 ### 3
 
 * Read-side (query) uses autoconfiguration as well as write-side.
