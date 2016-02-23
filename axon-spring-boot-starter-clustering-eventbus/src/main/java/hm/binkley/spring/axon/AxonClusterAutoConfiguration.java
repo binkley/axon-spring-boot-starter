@@ -37,9 +37,6 @@ import org.axonframework.eventhandling.DefaultClusterSelector;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.EventBusTerminal;
 import org.axonframework.eventhandling.SimpleCluster;
-import org.axonframework.eventsourcing.annotation
-        .AbstractAnnotatedAggregateRoot;
-import org.axonframework.eventstore.EventStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -52,35 +49,20 @@ import org.springframework.boot.context.properties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ServiceLoader;
-
 /**
- * {@code AxonAutoConfiguration} autoconfigures Axon Framework for Spring
- * Boot.  Use {@link EnableAutoConfiguration} on your configuration class, and
- * define a bean for {@link EventStore}.
+ * {@code AxonClusterAutoConfiguration} autoconfigures Axon Framework for
+ * Spring Boot to use event bus clustering.  Use {@link
+ * EnableAutoConfiguration} on your configuration class.
  * <p>
  * A minimal configuration is: <pre>   &#64;Configuration
  * &#64;EnableAutoConfiguration
- * public class AConfiguration {
- *     &#64;Bean
- *     public EventStore eventStore() {
- *         return ...;
- *     }
- * }</pre> In other classes inject Axon types
- * normally with {@code @Autowired}.  When injecting
- * repositories include the bean name: <pre>   &#64;Autowired
- * &#64;Qualifier("someAggregateRepository")
- * private Repository&lt;SomeAggregate&gt; repository;</pre>
- * For autoconfiguration to create the repository, mark your aggregate root
- * class with {@code @MetaInfServices} and extend {@link
- * AbstractAnnotatedAggregateRoot}:
- * <pre>   &#64;MetaInfServices
- * public class SomeAggregate
- *         extends AbstractAnnotatedAggregateRoot&lt;SomeIDType&gt;
- *     &#64;AggregateIdentifier
- *     private SomeIDType id;
- * }</pre>  Autoconfigurating repositories uses standard {@link
- * ServiceLoader} to discover aggregate root classes.
+ * public class AConfiguration {}</pre> In other classes inject Axon types
+ * normally with {@code @Autowired}.
+ *
+ * Configure the cluster name with the <code>axon.cluster.name</code>
+ * property or in YAML: <pre>    axon:
+ *   cluster:
+ *     name: TEST</pre>
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
  */
@@ -115,6 +97,13 @@ public class AxonClusterAutoConfiguration {
     public EventBus clusteringEventBus(final ClusterSelector selecter,
             final EventBusTerminal terminal) {
         return new ClusteringEventBus(selecter, terminal);
+    }
+
+    /** @todo Javadoc says this is auto-detected from ServiceLoader */
+    @Bean
+    public EventProcessingMonitorAutomation
+    eventProcessingMonitorAutomation() {
+        return new EventProcessingMonitorAutomation();
     }
 
     @ConfigurationProperties("axon.cluster")

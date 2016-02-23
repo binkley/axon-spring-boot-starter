@@ -25,19 +25,36 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.repositories;
+package hm.binkley.spring.axon.jms;
 
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.eventstore.supporting.VolatileEventStore;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.axonframework.domain.GenericDomainEventMessage;
+import org.axonframework.eventhandling.EventBus;
+import org.axonframework.springmessaging.eventbus.SpringMessagingEventBus;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@Configuration
-@EnableAutoConfiguration
-public class RepositoriesTestConfiguration {
-    @Bean
-    public EventStore eventStore() {
-        return new VolatileEventStore();
+import static org.assertj.core.api.Assertions.assertThat;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = JmsTestConfiguration.class)
+public final class JmsIT {
+    @Autowired
+    private EventBus eventBus;
+    @Autowired
+    private TestSubscribableChannel channel;
+
+    @Test
+    public void shouldWireSpringMessagingEventBus() {
+        assertThat(eventBus).isInstanceOf(SpringMessagingEventBus.class);
+    }
+
+    @Test
+    public void shouldPublishEventToEventBus() {
+        eventBus.publish(
+                new GenericDomainEventMessage<>("abc", 1L, "Dog fish!"));
+        assertThat(channel.sentMessages).hasSize(1);
     }
 }

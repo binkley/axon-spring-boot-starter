@@ -25,19 +25,17 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.repositories;
+package hm.binkley.spring.axon.jms;
 
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.eventstore.supporting.VolatileEventStore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableAutoConfiguration
-public class RepositoriesTestConfiguration {
+public class JmsTestConfiguration {
     @Bean
-    public EventStore eventStore() {
-        return new VolatileEventStore();
+    public TestSubscribableChannel testSubscribableChannel() {
+        return new TestSubscribableChannel();
     }
 }

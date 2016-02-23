@@ -8,32 +8,22 @@
         <version>4</version>
     </parent>
 
-    <artifactId>axon-spring-boot-starter</artifactId>
+    <artifactId>axon-spring-boot-starter-springmessaging</artifactId>
 
-    <name>Spring Boot/Axon Starter - Basic Functionality</name>
+    <name>Spring Boot/Axon Starter - JMS Event Bus</name>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>axon-spring-boot-starter-query</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.axonframework</groupId>
-            <artifactId>axon-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-monitoring-jmx</artifactId>
+            <artifactId>axon-springmessaging</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

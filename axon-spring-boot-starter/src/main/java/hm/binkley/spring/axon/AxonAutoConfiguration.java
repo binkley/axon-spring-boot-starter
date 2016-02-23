@@ -29,18 +29,22 @@ package hm.binkley.spring.axon;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.commandhandling.annotation.AnnotationCommandHandlerBeanPostProcessor;
+import org.axonframework.commandhandling.annotation
+        .AnnotationCommandHandlerBeanPostProcessor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.axonframework.domain.IdentifierFactory;
 import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
+import org.axonframework.eventsourcing.annotation
+        .AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventstore.EventStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.boot.autoconfigure.condition
+        .ConditionalOnMissingBean;
+import org.springframework.context.annotation
+        .AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -75,8 +79,11 @@ import static java.util.stream.StreamSupport.stream;
  *         extends AbstractAnnotatedAggregateRoot&lt;SomeIDType&gt;
  *     &#64;AggregateIdentifier
  *     private SomeIDType id;
- * }</pre>  Autoconfigurating repositories uses standard {@link ServiceLoader}
- * to discover aggregate root classes.
+ * }</pre>  Autoconfigurating repositories uses standard {@link
+ * ServiceLoader} to discover aggregate root classes.
+ *
+ * Command handlers automatically subscribe to command buses in the Spring
+ * context when annotated with {@code @CommandHandler}.
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
  */

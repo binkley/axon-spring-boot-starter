@@ -10,7 +10,7 @@
 
     <groupId>hm.binkley</groupId>
     <artifactId>axon-spring-boot-starter-parent</artifactId>
-    <version>3</version>
+    <version>4</version>
     <packaging>pom</packaging>
 
     <name>Spring Boot/Axon Starter - Parent</name>
@@ -62,6 +62,7 @@
         <module>axon-spring-boot-starter-clustering-eventbus</module>
         <module>axon-spring-boot-starter</module>
         <module>axon-spring-boot-starter-distributed-commandbus</module>
+        <module>axon-spring-boot-starter-springmessaging</module>
     </modules>
 
     <properties>
@@ -133,6 +134,11 @@
             <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-distributed-commandbus</artifactId>
+                <version>${axon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.axonframework</groupId>
+                <artifactId>axon-springmessaging</artifactId>
                 <version>${axon.version}</version>
             </dependency>
             <dependency>
@@ -253,7 +259,8 @@
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>${versions-maven-plugin.version}</version>
                 <configuration>
-                    <rulesUri>file://${session.executionRootDirectory}/maven-version-rules.xml
+                    <rulesUri>
+                        file://${session.executionRootDirectory}/maven-version-rules.xml
                     </rulesUri>
                 </configuration>
                 <executions>

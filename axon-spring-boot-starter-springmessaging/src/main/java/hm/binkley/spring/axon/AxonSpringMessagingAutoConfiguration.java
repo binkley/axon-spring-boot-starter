@@ -28,41 +28,45 @@
 package hm.binkley.spring.axon;
 
 import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventhandling.SimpleEventBus;
-import org.axonframework.eventhandling.annotation
-        .AnnotationEventListenerBeanPostProcessor;
+import org.axonframework.springmessaging.eventbus.SpringMessagingEventBus;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition
         .ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.SubscribableChannel;
 
 /**
- * {@code AxonQueryAutoConfiguration} autoconfigures Axon Framework for Spring
- * Boot but only for query (read side).
+ * {@code AxonSpringMessagingAutoConfiguration} autoconfigures Axon Framework
+ * for Spring Boot with a distributed event bus using Spring Messaging
+ * (typically JMS). Use {@link EnableAutoConfiguration} on your configuration
+ * class, and define a bean for {@link SubscribableChannel}.
  * <p>
  * A minimal configuration is: <pre>   &#64;Configuration
  * &#64;EnableAutoConfiguration
- * public class AConfiguration {}</pre> In other classes inject Axon types
+ * public class AConfiguration {
+ *     &#64;Bean
+ *     public SubscribableChannel subscribableChannel() {
+ *         return ...;
+ *     }
+ * }</pre> In other classes inject Axon types
  * normally with {@code @Autowired}.
- * <p>
- * Event handlers automatically subscribe to event buses in the Spring context
- * when annotated with {@code @EventHandler}.
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
  */
+@AutoConfigureBefore(AxonQueryAutoConfiguration.class)
 @ConditionalOnClass(EventBus.class)
 @Configuration
-public class AxonQueryAutoConfiguration {
+public class AxonSpringMessagingAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
-    public EventBus eventBus() {
-        return new SimpleEventBus();
-    }
-
-    @Bean
-    public AnnotationEventListenerBeanPostProcessor
-    annotationEventListenerBeanPostProcessor() {
-        return new AnnotationEventListenerBeanPostProcessor();
+    public EventBus springMessagingEventBus(
+            final SubscribableChannel channel) {
+        final SpringMessagingEventBus eventBus
+                = new SpringMessagingEventBus();
+        eventBus.setChannel(channel);
+        return eventBus;
     }
 }
