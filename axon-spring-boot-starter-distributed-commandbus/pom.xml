@@ -10,7 +10,7 @@
 
     <artifactId>axon-spring-boot-starter-distributed-commandbus</artifactId>
 
-    <name>Spring Boot/Axon Starter - Distributed Command Bus</name>
+    <name>Spring Boot/Axon Starter - JGroups Command Bus</name>
 
     <dependencies>
         <dependency>
@@ -30,7 +30,7 @@
             <artifactId>jgroups</artifactId>
         </dependency>
         <dependency>
-            <groupId>hm.binkley</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>axon-spring-boot-testing</artifactId>
         </dependency>
     </dependencies>

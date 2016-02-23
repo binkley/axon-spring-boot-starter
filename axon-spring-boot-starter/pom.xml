@@ -36,7 +36,7 @@
             <artifactId>axon-monitoring-jmx</artifactId>
         </dependency>
         <dependency>
-            <groupId>hm.binkley</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>axon-spring-boot-testing</artifactId>
         </dependency>
     </dependencies>
