@@ -41,6 +41,8 @@ This project is heavily indebted to:
 
 ### Read-side configuration
 
+Include `axon-spring-boot-starter-query` in your dependencies.
+
 ```
 @Configuration
 @EnableAutoConfiguration
@@ -48,6 +50,8 @@ public class AConfiguration {}
 ```
 
 ### Write-side configuration
+
+Include `axon-spring-boot-starter` in your dependencies.
 
 ```
 @Configuration
@@ -61,6 +65,8 @@ public class AConfiguration {
 ```
 
 ### Aggregate root and repository
+
+Include `axon-spring-boot-starter` in your dependencies.
 
 ```
 @MetaInfServices
@@ -80,7 +86,35 @@ public final class SomeClassUsingRespository {
 }
 ```
 
+### JGroups command bus
+
+Include `axon-spring-boot-starter-distributed-commandbus` in your
+dependencies.
+
+```
+@Configuration
+@EnableAutoConfiguration
+public class AConfiguration {
+    @Bean
+    public EventStore eventStore() {
+        return ...;
+    }
+}
+```
+
+In your `application.yaml`:
+
+```
+axon:
+  jgroups:
+    cluster-name: TEST
+```
+
+And include a suitable `jgroups-config.xml` in your classpath.
+
 ### Event processing monitor
+
+Include `axon-spring-boot-starter-clustering-eventbus` in your dependencies.
 
 _Note_: all monitors subscribe to all clusters in the Spring context.
 
@@ -101,11 +135,29 @@ public final class SomeEventProcessingMonitor
 }
 ```
 
+### Spring messaging
+
+Include `axon-spring-boot-start-springmessaging` in your dependencies.
+
+```
+@Configuration
+@EnableAutoConfiguration
+public class AConfiguration {
+    @Bean
+    public SubscribableChannel subscribableChannel() {
+        return ...;
+    }
+}
+```
+
+A typical implementation uses JMS (`spring-jms` dependency).
+
 ## Releases
 
 ### 4
 
 * Event processing monitor automation.
+* Spring Messaging support.
 
 ### 3
 
