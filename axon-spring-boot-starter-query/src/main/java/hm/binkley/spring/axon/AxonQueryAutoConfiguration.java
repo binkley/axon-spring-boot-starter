@@ -45,6 +45,9 @@ import org.springframework.context.annotation.Configuration;
  * &#64;EnableAutoConfiguration
  * public class AConfiguration {}</pre> In other classes inject Axon types
  * normally with {@code @Autowired}.
+ * <p>
+ * Event handlers automatically subscribe to event buses in the Spring context
+ * when annotated with {@code @EventHandler}.
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
  */

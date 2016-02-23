@@ -6,13 +6,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-/**
- * {@code EventProcessingMonitorAutomation} <strong>needs
- * documentation</strong>.
- *
- * @author <a href="mailto:boxley@thoughtworks.com">Brian Oxley</a>
- * @todo Needs documentation
- */
 public class EventProcessingMonitorAutomation
         implements ApplicationListener<ContextRefreshedEvent> {
     @Override

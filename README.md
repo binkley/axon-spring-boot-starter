@@ -33,11 +33,21 @@ This project is heavily indebted to:
   Note you *must* annotate injected repository fields with
   `@Qualified(name-of-repostiroy)` because of limitations in Spring's support
   for generics.
+* Autoconfiguration for event bus clusters.
 * Autoconfiguration for JGroups distributed command bus.
+* Autoconfiguration for event processing monitors.
 
 ## Minimal Example
 
-### Configuration
+### Read-side configuration
+
+```
+@Configuration
+@EnableAutoConfiguration
+public class AConfiguration {}
+```
+
+### Write-side configuration
 
 ```
 @Configuration
@@ -63,10 +73,31 @@ public class SomeAggregateRoot
 
 ```
 @Component
-public class SomeClassUsingRespository {
+public final class SomeClassUsingRespository {
     @Autowired
     @Qualifier("someAggregateRootRepository")
     private Repository<SomeAggregateRoot> repository;
+}
+```
+
+### Event processing monitor
+
+_Note_: all monitors subscribe to all clusters in the Spring context.
+
+```
+@Component
+public final class SomeEventProcessingMonitor
+        implements EventProcessingMonitor {
+    @Override
+    public void onEventProcessingCompleted(
+            final List<? extends EventMessage> eventMessages) {
+    }
+
+    @Override
+    public void onEventProcessingFailed(
+            final List<? extends EventMessage> eventMessages,
+            final Throwable cause) {
+    }
 }
 ```
 
