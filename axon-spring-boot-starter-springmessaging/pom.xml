@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -8,9 +11,9 @@
         <version>4-SNAPSHOT</version>
     </parent>
 
-    <artifactId>axon-spring-boot-starter-distributed-commandbus</artifactId>
+    <artifactId>axon-spring-boot-starter-springmessaging</artifactId>
 
-    <name>Spring Boot/Axon Starter - JGroups Command Bus</name>
+    <name>Spring Boot/Axon Starter - JMS Event Bus</name>
 
     <dependencies>
         <dependency>
@@ -19,15 +22,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-spring-boot-starter</artifactId>
+            <artifactId>axon-spring-boot-starter-query</artifactId>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
-            <artifactId>axon-distributed-commandbus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jgroups</groupId>
-            <artifactId>jgroups</artifactId>
+            <artifactId>axon-springmessaging</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

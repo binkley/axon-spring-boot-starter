@@ -1,6 +1,6 @@
 axon:
   jgroups:
-    cluster-name: test
+    cluster-name: TEST
 
 spring:
   main:
