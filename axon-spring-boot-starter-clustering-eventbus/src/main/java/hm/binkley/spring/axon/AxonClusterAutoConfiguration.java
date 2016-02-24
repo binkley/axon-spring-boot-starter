@@ -99,13 +99,6 @@ public class AxonClusterAutoConfiguration {
         return new ClusteringEventBus(selecter, terminal);
     }
 
-    /** @todo Javadoc says this is auto-detected from ServiceLoader */
-    @Bean
-    public EventProcessingMonitorAutomation
-    eventProcessingMonitorAutomation() {
-        return new EventProcessingMonitorAutomation();
-    }
-
     @ConfigurationProperties("axon.cluster")
     @Data
     public static final class AxonClusterProperties {

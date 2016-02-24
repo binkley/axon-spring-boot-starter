@@ -1,2 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   hm.binkley.spring.axon.AxonClusterAutoConfiguration
+org.springframework.context.ApplicationListener=\
+  hm.binkley.spring.axon.EventProcessingMonitorAutomation
