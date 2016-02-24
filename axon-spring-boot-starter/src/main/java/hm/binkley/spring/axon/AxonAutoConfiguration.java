@@ -33,7 +33,6 @@ import org.axonframework.commandhandling.annotation
         .AnnotationCommandHandlerBeanPostProcessor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
-import org.axonframework.domain.IdentifierFactory;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventsourcing.annotation
         .AbstractAnnotatedAggregateRoot;
@@ -127,12 +126,5 @@ public class AxonAutoConfiguration {
     public AnnotationCommandHandlerBeanPostProcessor
     annotationCommandHandlerBeanPostProcessor() {
         return new AnnotationCommandHandlerBeanPostProcessor();
-    }
-
-    /** @todo Javadoc says this is auto-detected from ServiceLoader */
-    @Bean
-    @ConditionalOnMissingBean
-    public IdentifierFactory identifierFactory() {
-        return IdentifierFactory.getInstance();
     }
 }
