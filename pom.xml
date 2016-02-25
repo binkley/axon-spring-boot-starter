@@ -76,9 +76,10 @@
         <module>axon-spring-boot-testing</module>
         <module>axon-spring-boot-starter-query</module>
         <module>axon-spring-boot-starter-clustering-eventbus</module>
+        <module>axon-spring-boot-starter-springmessaging</module>
         <module>axon-spring-boot-starter</module>
         <module>axon-spring-boot-starter-distributed-commandbus</module>
-        <module>axon-spring-boot-starter-springmessaging</module>
+        <module>axon-spring-boot-starter-monitoring</module>
     </modules>
 
     <properties>
