@@ -27,13 +27,16 @@
 
 package hm.binkley.spring.axon.interceptors;
 
+import lombok.Getter;
 import org.axonframework.commandhandling.CommandHandlerInterceptor;
+import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.supporting.VolatileEventStore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,5 +67,12 @@ public class HandlerInterceptorsTestConfiguration {
             handlings.add(1);
             return interceptorChain.proceed();
         };
+    }
+
+    @Component
+    @Getter
+    public static class TestCommandHandler {
+        @CommandHandler
+        public void on(final TestCommand ignored) { }
     }
 }
