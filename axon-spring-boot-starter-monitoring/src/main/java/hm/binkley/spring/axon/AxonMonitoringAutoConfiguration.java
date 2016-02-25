@@ -27,10 +27,8 @@
 
 package hm.binkley.spring.axon;
 
-import org.axonframework.auditing.AuditDataProvider;
 import org.axonframework.auditing.AuditLogger;
 import org.axonframework.auditing.AuditingInterceptor;
-import org.axonframework.auditing.CommandMetaDataProvider;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.eventstore.EventStore;
 import org.springframework.boot.actuate.audit.AuditEventRepository;
@@ -69,22 +67,23 @@ public class AxonMonitoringAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public AuditingInterceptor auditingInterceptor(
-            final AuditDataProvider provider, final AuditLogger logger) {
+            final MessageAuditDataProvider provider,
+            final AuditLogger logger) {
         final AuditingInterceptor interceptor = new AuditingInterceptor();
-        interceptor.setAuditDataProvider(provider);
+        interceptor.setAuditDataProvider(provider.asAuditDataProvider());
         interceptor.setAuditLogger(logger);
         return interceptor;
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public AuditDataProvider auditDataProvider() {
-        return new CommandMetaDataProvider();
+    public MessageAuditDataProvider messageAuditDataProvider() {
+        return new MessageMetaDataProvider();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public AuditLogger auditLogger(final AuditDataProvider provider) {
+    public AuditLogger auditLogger(final MessageAuditDataProvider provider) {
         return new SpringBootAuditLogger(provider);
     }
 }
