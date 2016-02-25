@@ -1,2 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   hm.binkley.spring.axon.AxonAutoConfiguration
+org.springframework.context.ApplicationListener=\
+  hm.binkley.spring.axon.CommandDispatchInterceptorAutomation,\
+  hm.binkley.spring.axon.CommandHandlerInterceptorAutomation

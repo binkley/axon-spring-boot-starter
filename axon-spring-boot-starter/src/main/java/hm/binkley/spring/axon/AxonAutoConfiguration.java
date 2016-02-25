@@ -113,6 +113,12 @@ public class AxonAutoConfiguration {
                 eventStore);
     }
 
+    @Bean
+    public AnnotationCommandHandlerBeanPostProcessor
+    annotationCommandHandlerBeanPostProcessor() {
+        return new AnnotationCommandHandlerBeanPostProcessor();
+    }
+
     @PostConstruct
     public void registerRepositories() {
         stream(load(AbstractAnnotatedAggregateRoot.class).spliterator(),
@@ -120,11 +126,5 @@ public class AxonAutoConfiguration {
                 map(Object::getClass).
                 distinct().
                 forEach(context::register);
-    }
-
-    @Bean
-    public AnnotationCommandHandlerBeanPostProcessor
-    annotationCommandHandlerBeanPostProcessor() {
-        return new AnnotationCommandHandlerBeanPostProcessor();
     }
 }

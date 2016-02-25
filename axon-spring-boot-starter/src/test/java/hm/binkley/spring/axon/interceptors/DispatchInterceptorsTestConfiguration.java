@@ -25,36 +25,44 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.handlers;
+package hm.binkley.spring.axon.interceptors;
 
-import lombok.Getter;
-import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.commandhandling.CommandDispatchInterceptor;
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.supporting.VolatileEventStore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
+import org.springframework.core.annotation.Order;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
-public class HandlersTestConfiguration {
+public class DispatchInterceptorsTestConfiguration {
+    final List<Integer> handlings = new ArrayList<>();
+
     @Bean
     public EventStore eventStore() {
         return new VolatileEventStore();
     }
 
-    @Component
-    @Getter
-    public static class EventCollector {
-        private final List<TestEvent> events = new ArrayList<>();
+    @Bean
+    @Order(2)
+    public CommandDispatchInterceptor aCommandHandlerInterceptor() {
+        return commandMessage -> {
+            handlings.add(2);
+            return commandMessage;
+        };
+    }
 
-        @EventHandler
-        public void on(final TestEvent event) {
-            events.add(event);
-        }
+    @Bean
+    @Order(1)
+    public CommandDispatchInterceptor bCommandHandlerInterceptor() {
+        return commandMessage -> {
+            handlings.add(1);
+            return commandMessage;
+        };
     }
 }

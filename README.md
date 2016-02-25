@@ -154,6 +154,11 @@ A typical implementation uses JMS (`spring-jms` dependency).
 
 ## Releases
 
+### 5
+
+* Autoconfiguration of command dispatch interceptors
+* Autoconfiguration of command handler interceptors
+
 ### 4
 
 * Event processing monitor automation.

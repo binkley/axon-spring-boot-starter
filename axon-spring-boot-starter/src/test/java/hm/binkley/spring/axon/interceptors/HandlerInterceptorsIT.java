@@ -25,56 +25,33 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.handlers;
+package hm.binkley.spring.axon.interceptors;
 
-import hm.binkley.spring.axon.handlers.HandlersTestConfiguration
-        .EventCollector;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.domain.DomainEventStream;
-import org.axonframework.eventstore.EventStore;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.util.Collections.singletonList;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Ignore("Needs @CommandHandler")
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = HandlersTestConfiguration.class)
-public final class HandlersIT {
+@SpringApplicationConfiguration(
+        classes = HandlerInterceptorsTestConfiguration.class)
+public final class HandlerInterceptorsIT {
     @Autowired
     private CommandGateway commands;
     @Autowired
-    private EventCollector eventCollector;
-    @Autowired
-    private EventStore eventStore;
+    private HandlerInterceptorsTestConfiguration configuration;
 
     @Test
-    public void shouldWireEventStore() {
-        commands.send(new TestCommand("abc"));
-        assertThat(asAggregateIds(eventStore
-                .readEvents(HandlersTestAggregateRoot.class.getSimpleName(),
-                        "abc"))).
-                isEqualTo(singletonList(new TestEvent("abc")));
-    }
+    public void shouldInterceptInOrder() {
+        commands.send(this);
 
-    @Test
-    public void shouldFireHandlers() {
-        commands.send(new TestCommand("def"));
-        assertThat(eventCollector.getEvents()).
-                isEqualTo(singletonList(new TestEvent("def")));
-    }
-
-    private static List<TestEvent> asAggregateIds(
-            final DomainEventStream stream) {
-        final List<TestEvent> events = new ArrayList<>();
-        while (stream.hasNext())
-            events.add((TestEvent) stream.next().getPayload());
-        return events;
+        assertThat(configuration.handlings).isEqualTo(asList(1, 2));
     }
 }
