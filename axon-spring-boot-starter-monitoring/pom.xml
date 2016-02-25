@@ -11,29 +11,23 @@
         <version>5-SNAPSHOT</version>
     </parent>
 
-    <artifactId>axon-spring-boot-starter</artifactId>
+    <artifactId>axon-spring-boot-starter-monitoring</artifactId>
 
-    <name>Spring Boot/Axon Starter - Basic Functionality</name>
+    <name>Spring Boot/Axon Starter - Monitoring</name>
 
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-spring-boot-starter-query</artifactId>
+            <artifactId>axon-spring-boot-starter</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.axonframework</groupId>
-            <artifactId>axon-core</artifactId>
+            <artifactId>axon-monitoring-jmx</artifactId>
+            <version>${axon.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <scope>test</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

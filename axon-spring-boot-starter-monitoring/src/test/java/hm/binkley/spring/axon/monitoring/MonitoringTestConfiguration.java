@@ -25,11 +25,56 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.query;
+package hm.binkley.spring.axon.monitoring;
 
+import org.axonframework.eventstore.EventStore;
+import org.axonframework.eventstore.supporting.VolatileEventStore;
+import org.springframework.boot.actuate.audit.AuditEvent;
+import org.springframework.boot.actuate.audit.AuditEventRepository;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
-public class QueryTestConfiguration {}
+public class MonitoringTestConfiguration {
+    final List<AuditEvent> trail = new ArrayList<>();
+
+    @Bean
+    public EventStore eventStore() {
+        return new VolatileEventStore();
+    }
+
+    @Bean
+    public AuditEventRepository auditEventRepository() {
+        return new TestAuditEventRepository();
+    }
+
+    @Bean
+    public SuccessfulCommandHandler successfulCommandHandler() {
+        return new SuccessfulCommandHandler();
+    }
+
+    @Bean
+    public FailedCommandHandler failedCommandHandler() {
+        return new FailedCommandHandler();
+    }
+
+    private class TestAuditEventRepository
+            implements AuditEventRepository {
+        @Override
+        public List<AuditEvent> find(final String principal,
+                final Date after) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void add(final AuditEvent event) {
+            trail.add(event);
+        }
+    }
+}
