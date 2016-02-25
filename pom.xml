@@ -85,7 +85,7 @@
     <properties>
         <!-- @formatter:off -->
         <assertj.version>3.3.0</assertj.version>
-        <axon.version>2.4.3</axon.version>
+        <axon.version>2.4.4</axon.version>
         <buildplan-maven-plugin.version>1.2</buildplan-maven-plugin.version>
         <extra-enforcer-rules.version>1.0-beta-4</extra-enforcer-rules.version>
         <failsafe.printSummary>false</failsafe.printSummary>
