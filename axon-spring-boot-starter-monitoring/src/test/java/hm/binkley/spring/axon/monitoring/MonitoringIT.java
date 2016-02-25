@@ -27,17 +27,18 @@
 
 package hm.binkley.spring.axon.monitoring;
 
-import hm.binkley.spring.axon.CommandAuditEvent;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,16 +49,16 @@ public final class MonitoringIT {
     private CommandGateway commands;
     @Autowired
     private MonitoringTestConfiguration configuration;
-    private List<CommandAuditEvent> commandTrail;
+    private List<AuditEvent> trail;
 
     @Before
     public void rememberTrail() {
-        commandTrail = configuration.commandTrail;
+        trail = configuration.trail;
     }
 
     @After
     public void clearTrail() {
-        commandTrail.clear();
+        trail.clear();
     }
 
     @Test
@@ -65,11 +66,13 @@ public final class MonitoringIT {
         final SuccessfulCommand payload = new SuccessfulCommand();
         commands.send(payload);
 
-        assertThat(commandTrail).hasSize(1);
-        final CommandAuditEvent event = commandTrail.get(0);
-        assertThat(event.getCommand().getPayload()).
-                isSameAs(payload);
-        assertThat(event.getReturnValue()).
+        assertThat(trail).hasSize(1);
+        final Map<String, Object> data = trail.get(0).getData();
+        assertThat(data.get("command-name")).
+                isSameAs(payload.getClass().getName());
+        assertThat(data.get("command-success")).
+                isEqualTo(true);
+        assertThat(data.get("command-return-value")).
                 isEqualTo(3);
     }
 
@@ -78,11 +81,13 @@ public final class MonitoringIT {
         final FailedCommand payload = new FailedCommand();
         commands.send(payload);
 
-        assertThat(commandTrail).hasSize(1);
-        final CommandAuditEvent event = commandTrail.get(0);
-        assertThat(event.getCommand().getPayload()).
-                isSameAs(payload);
-        assertThat(event.getFailureCause()).
+        assertThat(trail).hasSize(1);
+        final Map<String, Object> data = trail.get(0).getData();
+        assertThat(data.get("command-name")).
+                isSameAs(payload.getClass().getName());
+        assertThat(data.get("command-success")).
+                isEqualTo(false);
+        assertThat(data.get("command-failure-cause")).
                 isInstanceOf(FailedException.class);
     }
 }

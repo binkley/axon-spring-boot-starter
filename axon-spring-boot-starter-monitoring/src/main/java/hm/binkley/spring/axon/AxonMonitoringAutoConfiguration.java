@@ -27,9 +27,14 @@
 
 package hm.binkley.spring.axon;
 
+import org.axonframework.auditing.AuditDataProvider;
 import org.axonframework.auditing.AuditLogger;
 import org.axonframework.auditing.AuditingInterceptor;
-import org.axonframework.eventhandling.EventBus;
+import org.axonframework.auditing.CommandMetaDataProvider;
+import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.eventstore.EventStore;
+import org.springframework.boot.actuate.audit.AuditEventRepository;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition
         .ConditionalOnMissingBean;
@@ -38,34 +43,48 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * {@code AxonSpringMessagingAutoConfiguration} autoconfigures Axon Framework
- * for Spring Boot for monitoring.  A minimal configuration is:
+ * for Spring Boot for monitoring.  Use {@link EnableAutoConfiguration} on
+ * your configuration class, and define beans for {@link EventStore} and
+ * {@link AuditEventRepository}.  A minimal configuration is:
  * <pre>&#64;Configuration
  * &#64;EnableAutoConfiguration
- * public class AConfiguration {}</pre> In other classes inject Axon types
+ * public class AConfiguration {
+ *     &#64;Bean
+ *     public {@link EventStore} eventStore() {
+ *         return ...;
+ *     }
+ *
+ *     &#64;Bean
+ *     public {@link AuditEventRepository} auditEventRepository() {
+ *         return ...;
+ *     }
+ * }</pre> In other classes inject Axon types
  * normally with {@code @Autowired}.
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
  */
-@ConditionalOnClass(EventBus.class)
+@ConditionalOnClass(CommandBus.class)
 @Configuration
 public class AxonMonitoringAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public AuditingInterceptor auditingInterceptor(
-            final AuditLogger auditLogger) {
+            final AuditDataProvider provider, final AuditLogger logger) {
         final AuditingInterceptor interceptor = new AuditingInterceptor();
-        interceptor.setAuditLogger(auditLogger);
+        interceptor.setAuditDataProvider(provider);
+        interceptor.setAuditLogger(logger);
         return interceptor;
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public AuditLogger auditLogger(final AuditTrail trail) {
-        return new RecordingAuditLogger(trail);
+    public AuditDataProvider auditDataProvider() {
+        return new CommandMetaDataProvider();
     }
 
     @Bean
-    public SpringAuditLogger springAuditLogger() {
-        return new SpringAuditLogger();
+    @ConditionalOnMissingBean
+    public AuditLogger auditLogger(final AuditDataProvider provider) {
+        return new SpringBootAuditLogger(provider);
     }
 }

@@ -27,23 +27,22 @@
 
 package hm.binkley.spring.axon.monitoring;
 
-import hm.binkley.spring.axon.AuditTrail;
-import hm.binkley.spring.axon.CommandAuditEvent;
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.supporting.VolatileEventStore;
+import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.actuate.audit.AuditEventRepository;
-import org.springframework.boot.actuate.audit.InMemoryAuditEventRepository;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
 public class MonitoringTestConfiguration {
-    final List<CommandAuditEvent> commandTrail = new ArrayList<>();
+    final List<AuditEvent> trail = new ArrayList<>();
 
     @Bean
     public EventStore eventStore() {
@@ -51,13 +50,8 @@ public class MonitoringTestConfiguration {
     }
 
     @Bean
-    public AuditTrail auditTrail() {
-        return new TestAuditTrail();
-    }
-
-    @Bean
     public AuditEventRepository auditEventRepository() {
-        return new InMemoryAuditEventRepository();
+        return new TestAuditEventRepository();
     }
 
     @Bean
@@ -70,11 +64,17 @@ public class MonitoringTestConfiguration {
         return new FailedCommandHandler();
     }
 
-    private final class TestAuditTrail
-            implements AuditTrail {
+    private class TestAuditEventRepository
+            implements AuditEventRepository {
         @Override
-        public void record(final CommandAuditEvent event) {
-            commandTrail.add(event);
+        public List<AuditEvent> find(final String principal,
+                final Date after) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void add(final AuditEvent event) {
+            trail.add(event);
         }
     }
 }
