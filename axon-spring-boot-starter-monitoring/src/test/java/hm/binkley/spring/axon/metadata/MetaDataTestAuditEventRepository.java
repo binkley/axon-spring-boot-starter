@@ -1,4 +1,4 @@
-package hm.binkley.spring.axon.monitoring;
+package hm.binkley.spring.axon.metadata;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.audit.AuditEvent;
@@ -8,9 +8,9 @@ import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
-class TestAuditEventRepository
+class MetaDataTestAuditEventRepository
         implements AuditEventRepository {
-    private final MonitoringTestConfiguration configuration;
+    private final MetaDataTestConfiguration configuration;
 
     @Override
     public List<AuditEvent> find(final String principal, final Date after) {

@@ -25,11 +25,9 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.monitoring;
+package hm.binkley.spring.axon.metadata;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.domain.GenericDomainEventMessage;
-import org.axonframework.eventhandling.Cluster;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,17 +48,14 @@ import static hm.binkley.spring.axon.SpringBootAuditLogger.FAILURE_CAUSE;
 import static hm.binkley.spring.axon.SpringBootAuditLogger.NAME;
 import static hm.binkley.spring.axon.SpringBootAuditLogger.RETURN_VALUE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MonitoringTestConfiguration.class)
-public final class MonitoringIT {
+@SpringApplicationConfiguration(classes = MetaDataTestConfiguration.class)
+public final class MetaDataIT {
     @Autowired
     private CommandGateway commands;
     @Autowired
-    private Cluster events;
-    @Autowired
-    private MonitoringTestConfiguration configuration;
+    private MetaDataTestConfiguration configuration;
     private List<AuditEvent> trail;
 
     @Before
@@ -75,75 +70,59 @@ public final class MonitoringIT {
 
     @Test
     public void shouldAuditSuccessfulCommands() {
-        final SuccessfulCommand payload = new SuccessfulCommand();
+        final String aggregateId = "abc";
+        final SuccessfulCommand payload = new SuccessfulCommand(aggregateId);
         commands.send(payload);
 
-        assertThat(trail).hasSize(1);
-        final AuditEvent auditEvent = trail.get(0);
-        assertThat(auditEvent.getType()).
+        assertThat(trail).hasSize(2);
+
+        final AuditEvent commandAuditEvent = trail.get(1);
+        assertThat(commandAuditEvent.getType()).
                 isEqualTo(AXON_COMMAND_AUDIT_TYPE);
-        final Map<String, Object> data = auditEvent.getData();
-        assertThat(data.get(NAME)).
-                isEqualTo(payload.getClass().getName());
-        assertThat(data.get(RETURN_VALUE)).
-                isEqualTo(3);
-        assertThat(data.get(FAILURE_CAUSE)).
+        final Map<String, Object> commandData = commandAuditEvent.getData();
+        assertThat(commandData.get(NAME)).
+                isEqualTo(SuccessfulCommand.class.getName());
+        assertThat(commandData.get(RETURN_VALUE)).
+                isEqualTo(aggregateId);
+        assertThat(commandData.get(FAILURE_CAUSE)).
+                isNull();
+
+        final AuditEvent eventAuditEvent = trail.get(0);
+        assertThat(eventAuditEvent.getType()).
+                isEqualTo(AXON_EVENT_AUDIT_TYPE);
+        final Map<String, Object> eventData = eventAuditEvent.getData();
+        assertThat(eventData.get(NAME)).
+                isEqualTo(SuccessfulEvent.class.getName());
+        assertThat(eventData.get(FAILURE_CAUSE)).
                 isNull();
     }
 
     @Test
     public void shouldAuditFailedCommands() {
         final FailedException cause = new FailedException();
-        final FailedCommand payload = new FailedCommand(cause);
+        final FailedCommand payload = new FailedCommand("def", cause);
         commands.send(payload);
 
-        assertThat(trail).hasSize(1);
-        final AuditEvent auditEvent = trail.get(0);
-        assertThat(auditEvent.getType()).
+        assertThat(trail).hasSize(2);
+
+        final AuditEvent commandAuditEvent = trail.get(1);
+        assertThat(commandAuditEvent.getType()).
                 isEqualTo(AXON_COMMAND_AUDIT_TYPE);
-        final Map<String, Object> data = auditEvent.getData();
-        assertThat(data.get(NAME)).
-                isEqualTo(payload.getClass().getName());
-        assertThat(data.get(RETURN_VALUE)).
+        final Map<String, Object> commandData = commandAuditEvent.getData();
+        assertThat(commandData.get(NAME)).
+                isEqualTo(FailedCommand.class.getName());
+        assertThat(commandData.get(RETURN_VALUE)).
                 isNull();
-        assertThat(data.get(FAILURE_CAUSE)).
+        assertThat(commandData.get(FAILURE_CAUSE)).
                 isSameAs(cause);
-    }
 
-    @Test
-    public void shouldAuditSuccessfulEvents() {
-        final SuccessfulEvent payload = new SuccessfulEvent();
-        events.publish(new GenericDomainEventMessage<>("abc", 1L, payload));
-
-        assertThat(trail).hasSize(1);
-        final AuditEvent auditEvent = trail.get(0);
-        assertThat(auditEvent.getType()).
+        final AuditEvent eventAuditEvent = trail.get(0);
+        assertThat(eventAuditEvent.getType()).
                 isEqualTo(AXON_EVENT_AUDIT_TYPE);
-        final Map<String, Object> data = auditEvent.getData();
-        assertThat(data.get(NAME)).
-                isEqualTo(payload.getClass().getName());
-        assertThat(data.get(FAILURE_CAUSE)).
-                isNull();
-    }
-
-    @Test
-    public void shouldAuditFailedEvents() {
-        final FailedException cause = new FailedException();
-        final FailedEvent payload = new FailedEvent(cause);
-        try {
-            events.publish(
-                    new GenericDomainEventMessage<>("abc", 1L, payload));
-            fail();
-        } catch (final FailedException ignored) {
-            assertThat(trail).hasSize(1);
-            final AuditEvent auditEvent = trail.get(0);
-            assertThat(auditEvent.getType()).
-                    isEqualTo(AXON_EVENT_AUDIT_TYPE);
-            final Map<String, Object> data = auditEvent.getData();
-            assertThat(data.get(NAME)).
-                    isEqualTo(payload.getClass().getName());
-            assertThat(data.get(FAILURE_CAUSE)).
-                    isSameAs(cause);
-        }
+        final Map<String, Object> eventData = eventAuditEvent.getData();
+        assertThat(eventData.get(NAME)).
+                isEqualTo(FailedEvent.class.getName());
+        assertThat(eventData.get(FAILURE_CAUSE)).
+                isSameAs(cause);
     }
 }
