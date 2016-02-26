@@ -8,11 +8,11 @@ import java.util.List;
 
 class TestAuditEventRepository
         implements AuditEventRepository {
-    private final MonitoringTestConfiguration monitoringTestConfiguration;
+    private final MonitoringTestConfiguration configuration;
 
-        TestAuditEventRepository(
-            final MonitoringTestConfiguration monitoringTestConfiguration) {
-        this.monitoringTestConfiguration = monitoringTestConfiguration;
+    TestAuditEventRepository(
+            final MonitoringTestConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     @Override
@@ -22,6 +22,6 @@ class TestAuditEventRepository
 
     @Override
     public void add(final AuditEvent event) {
-        monitoringTestConfiguration.trail.add(event);
+        configuration.trail.add(event);
     }
 }
