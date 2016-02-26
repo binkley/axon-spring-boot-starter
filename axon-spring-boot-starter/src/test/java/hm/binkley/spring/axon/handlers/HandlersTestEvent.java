@@ -30,6 +30,6 @@ package hm.binkley.spring.axon.handlers;
 import lombok.Value;
 
 @Value
-public class TestCommand {
+public class HandlersTestEvent {
     private final String id;
 }

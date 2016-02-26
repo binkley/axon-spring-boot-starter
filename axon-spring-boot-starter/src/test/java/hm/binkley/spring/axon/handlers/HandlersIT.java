@@ -56,25 +56,25 @@ public final class HandlersIT {
 
     @Test
     public void shouldWireEventStore() {
-        commands.send(new TestCommand("abc"));
+        commands.send(new HandlersTestCommand("abc"));
         assertThat(asAggregateIds(eventStore
                 .readEvents(HandlersTestAggregateRoot.class.getSimpleName(),
                         "abc"))).
-                isEqualTo(singletonList(new TestEvent("abc")));
+                isEqualTo(singletonList(new HandlersTestEvent("abc")));
     }
 
     @Test
     public void shouldFireHandlers() {
-        commands.send(new TestCommand("def"));
+        commands.send(new HandlersTestCommand("def"));
         assertThat(eventCollector.getEvents()).
-                isEqualTo(singletonList(new TestEvent("def")));
+                isEqualTo(singletonList(new HandlersTestEvent("def")));
     }
 
-    private static List<TestEvent> asAggregateIds(
+    private static List<HandlersTestEvent> asAggregateIds(
             final DomainEventStream stream) {
-        final List<TestEvent> events = new ArrayList<>();
+        final List<HandlersTestEvent> events = new ArrayList<>();
         while (stream.hasNext())
-            events.add((TestEvent) stream.next().getPayload());
+            events.add((HandlersTestEvent) stream.next().getPayload());
         return events;
     }
 }

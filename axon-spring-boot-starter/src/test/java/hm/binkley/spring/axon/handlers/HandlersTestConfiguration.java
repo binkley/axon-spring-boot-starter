@@ -50,10 +50,10 @@ public class HandlersTestConfiguration {
     @Component
     @Getter
     public static class EventCollector {
-        private final List<TestEvent> events = new ArrayList<>();
+        private final List<HandlersTestEvent> events = new ArrayList<>();
 
         @EventHandler
-        public void on(final TestEvent event) {
+        public void on(final HandlersTestEvent event) {
             events.add(event);
         }
     }

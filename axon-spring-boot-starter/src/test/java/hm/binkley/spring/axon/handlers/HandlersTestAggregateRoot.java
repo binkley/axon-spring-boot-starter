@@ -42,8 +42,8 @@ public class HandlersTestAggregateRoot
     private String id;
 
     @CommandHandler
-    public HandlersTestAggregateRoot(final TestCommand command) {
+    public HandlersTestAggregateRoot(final HandlersTestCommand command) {
         id = command.getId();
-        apply(new TestEvent(command.getId()));
+        apply(new HandlersTestEvent(command.getId()));
     }
 }

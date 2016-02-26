@@ -9,7 +9,7 @@ public class HandlersTest {
     public void shouldPublishEvents() {
         newGivenWhenThenFixture(HandlersTestAggregateRoot.class).
                 given().
-                when(new TestCommand("abc")).
-                expectEvents(new TestEvent("abc"));
+                when(new HandlersTestCommand("abc")).
+                expectEvents(new HandlersTestEvent("abc"));
     }
 }
