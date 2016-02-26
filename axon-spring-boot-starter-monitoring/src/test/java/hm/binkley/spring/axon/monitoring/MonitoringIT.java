@@ -42,6 +42,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 import java.util.Map;
 
+import static hm.binkley.spring.axon.AxonCommandAuditEvent
+        .AXON_COMMAND_AUDIT_TYPE;
+import static hm.binkley.spring.axon.AxonEventAuditEvent
+        .AXON_EVENT_AUDIT_TYPE;
+import static hm.binkley.spring.axon.SpringBootAuditLogger.FAILURE_CAUSE;
+import static hm.binkley.spring.axon.SpringBootAuditLogger.NAME;
+import static hm.binkley.spring.axon.SpringBootAuditLogger.RETURN_VALUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
@@ -72,12 +79,13 @@ public final class MonitoringIT {
         commands.send(payload);
 
         assertThat(trail).hasSize(1);
-        final Map<String, Object> data = trail.get(0).getData();
-        assertThat(data.get("command-name")).
+        final AuditEvent auditEvent = trail.get(0);
+        assertThat(auditEvent.getType()).
+                isEqualTo(AXON_COMMAND_AUDIT_TYPE);
+        final Map<String, Object> data = auditEvent.getData();
+        assertThat(data.get(NAME)).
                 isEqualTo(payload.getClass().getName());
-        assertThat(data.get("command-success")).
-                isEqualTo(true);
-        assertThat(data.get("command-return-value")).
+        assertThat(data.get(RETURN_VALUE)).
                 isEqualTo(3);
     }
 
@@ -88,12 +96,13 @@ public final class MonitoringIT {
         commands.send(payload);
 
         assertThat(trail).hasSize(1);
-        final Map<String, Object> data = trail.get(0).getData();
-        assertThat(data.get("command-name")).
+        final AuditEvent auditEvent = trail.get(0);
+        assertThat(auditEvent.getType()).
+                isEqualTo(AXON_COMMAND_AUDIT_TYPE);
+        final Map<String, Object> data = auditEvent.getData();
+        assertThat(data.get(NAME)).
                 isEqualTo(payload.getClass().getName());
-        assertThat(data.get("command-success")).
-                isEqualTo(false);
-        assertThat(data.get("command-failure-cause")).
+        assertThat(data.get(FAILURE_CAUSE)).
                 isSameAs(cause);
     }
 
@@ -103,11 +112,12 @@ public final class MonitoringIT {
         events.publish(new GenericDomainEventMessage<>("abc", 1L, payload));
 
         assertThat(trail).hasSize(1);
-        final Map<String, Object> data = trail.get(0).getData();
-        assertThat(data.get("event-name")).
+        final AuditEvent auditEvent = trail.get(0);
+        assertThat(auditEvent.getType()).
+                isEqualTo(AXON_EVENT_AUDIT_TYPE);
+        final Map<String, Object> data = auditEvent.getData();
+        assertThat(data.get(NAME)).
                 isEqualTo(payload.getClass().getName());
-        assertThat(data.get("event-success")).
-                isEqualTo(true);
     }
 
     @Test
@@ -120,12 +130,13 @@ public final class MonitoringIT {
             fail();
         } catch (final FailedException ignored) {
             assertThat(trail).hasSize(1);
-            final Map<String, Object> data = trail.get(0).getData();
-            assertThat(data.get("event-name")).
+            final AuditEvent auditEvent = trail.get(0);
+            assertThat(auditEvent.getType()).
+                    isEqualTo(AXON_EVENT_AUDIT_TYPE);
+            final Map<String, Object> data = auditEvent.getData();
+            assertThat(data.get(NAME)).
                     isEqualTo(payload.getClass().getName());
-            assertThat(data.get("event-success")).
-                    isEqualTo(false);
-            assertThat(data.get("event-failure-cause")).
+            assertThat(data.get(FAILURE_CAUSE)).
                     isSameAs(cause);
         }
     }
