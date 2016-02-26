@@ -21,6 +21,11 @@
             <artifactId>axon-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>axon-spring-boot-starter-clustering-eventbus
+            </artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-monitoring-jmx</artifactId>
             <version>${axon.version}</version>

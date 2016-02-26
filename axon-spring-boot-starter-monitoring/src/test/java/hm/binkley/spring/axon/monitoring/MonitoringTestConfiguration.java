@@ -36,7 +36,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Configuration
@@ -51,7 +50,7 @@ public class MonitoringTestConfiguration {
 
     @Bean
     public AuditEventRepository auditEventRepository() {
-        return new TestAuditEventRepository();
+        return new TestAuditEventRepository(this);
     }
 
     @Bean
@@ -64,17 +63,13 @@ public class MonitoringTestConfiguration {
         return new FailedCommandHandler();
     }
 
-    private class TestAuditEventRepository
-            implements AuditEventRepository {
-        @Override
-        public List<AuditEvent> find(final String principal,
-                final Date after) {
-            throw new UnsupportedOperationException();
-        }
+    @Bean
+    public SuccessfulEventHandler successfulEventHandler() {
+        return new SuccessfulEventHandler();
+    }
 
-        @Override
-        public void add(final AuditEvent event) {
-            trail.add(event);
-        }
+    @Bean
+    public FailedEventHandler failedEventHandler() {
+        return new FailedEventHandler();
     }
 }

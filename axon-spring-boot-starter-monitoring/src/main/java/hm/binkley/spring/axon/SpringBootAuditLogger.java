@@ -79,7 +79,8 @@ class SpringBootAuditLogger
         SuccessfulDataMap(final MessageAuditDataProvider auditDataProvider,
                 final EventMessage event) {
             putAll(auditDataProvider.provideAuditDataFor(event));
-            compute("event-name", throwIfPresent(event.getPayloadType()));
+            compute("event-name",
+                    throwIfPresent(event.getPayloadType().getName()));
             compute(DEFAULT_CORRELATION_KEY,
                     throwIfPresent(event.getIdentifier()));
             compute("event-success", throwIfPresent(true));
@@ -103,7 +104,8 @@ class SpringBootAuditLogger
         FailedDataMap(final MessageAuditDataProvider auditDataProvider,
                 final EventMessage event, final Throwable failureCause) {
             putAll(auditDataProvider.provideAuditDataFor(event));
-            compute("event-name", throwIfPresent(event.getPayloadType()));
+            compute("event-name",
+                    throwIfPresent(event.getPayloadType().getName()));
             compute(DEFAULT_CORRELATION_KEY,
                     throwIfPresent(event.getIdentifier()));
             compute("event-success", throwIfPresent(false));
