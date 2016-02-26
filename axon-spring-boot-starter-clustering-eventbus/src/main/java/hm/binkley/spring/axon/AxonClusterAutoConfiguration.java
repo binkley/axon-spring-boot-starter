@@ -36,7 +36,9 @@ import org.axonframework.eventhandling.ClusteringEventBus;
 import org.axonframework.eventhandling.DefaultClusterSelector;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.EventBusTerminal;
+import org.axonframework.eventhandling.OrderResolver;
 import org.axonframework.eventhandling.SimpleCluster;
+import org.axonframework.eventhandling.SpringAnnotationOrderResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -58,7 +60,7 @@ import org.springframework.context.annotation.Configuration;
  * &#64;EnableAutoConfiguration
  * public class AConfiguration {}</pre> In other classes inject Axon types
  * normally with {@code @Autowired}.
- *
+ * <p>
  * Configure the cluster name with the <code>axon.cluster.name</code>
  * property or in YAML: <pre>    axon:
  *   cluster:
@@ -76,8 +78,14 @@ public class AxonClusterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Cluster simpleCluster() {
-        return new SimpleCluster(properties.getName());
+    public OrderResolver orderResolver() {
+        return new SpringAnnotationOrderResolver();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public Cluster simpleCluster(final OrderResolver orderResolver) {
+        return new SimpleCluster(properties.getName(), orderResolver);
     }
 
     @Bean
