@@ -83,7 +83,8 @@ public final class MonitoringIT {
 
     @Test
     public void shouldAuditFailedCommands() {
-        final FailedCommand payload = new FailedCommand();
+        final FailedException cause = new FailedException();
+        final FailedCommand payload = new FailedCommand(cause);
         commands.send(payload);
 
         assertThat(trail).hasSize(1);
@@ -93,7 +94,7 @@ public final class MonitoringIT {
         assertThat(data.get("command-success")).
                 isEqualTo(false);
         assertThat(data.get("command-failure-cause")).
-                isInstanceOf(FailedException.class);
+                isSameAs(cause);
     }
 
     @Test
@@ -111,7 +112,8 @@ public final class MonitoringIT {
 
     @Test
     public void shouldAuditFailedEvents() {
-        final FailedEvent payload = new FailedEvent();
+        final FailedException cause = new FailedException();
+        final FailedEvent payload = new FailedEvent(cause);
         try {
             events.publish(
                     new GenericDomainEventMessage<>("abc", 1L, payload));
@@ -124,7 +126,7 @@ public final class MonitoringIT {
             assertThat(data.get("event-success")).
                     isEqualTo(false);
             assertThat(data.get("event-failure-cause")).
-                    isInstanceOf(FailedException.class);
+                    isSameAs(cause);
         }
     }
 }

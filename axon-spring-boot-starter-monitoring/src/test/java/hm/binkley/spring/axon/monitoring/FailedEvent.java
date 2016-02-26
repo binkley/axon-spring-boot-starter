@@ -1,3 +1,8 @@
 package hm.binkley.spring.axon.monitoring;
 
-public final class FailedEvent {}
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public final class FailedEvent {
+    final FailedException cause;
+}

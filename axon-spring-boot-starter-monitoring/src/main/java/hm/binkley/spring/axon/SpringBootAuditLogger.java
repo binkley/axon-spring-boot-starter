@@ -64,10 +64,10 @@ class SpringBootAuditLogger
 
     private static class SuccessfulDataMap
             extends LinkedHashMap<String, Object> {
-        SuccessfulDataMap(final MessageAuditDataProvider auditDataProvider,
+        SuccessfulDataMap(final MessageAuditDataProvider provider,
                 final CommandMessage<?> command, final Object returnValue,
                 final List<EventMessage> events) {
-            putAll(auditDataProvider.provideAuditDataFor(command));
+            putAll(provider.provideAuditDataFor(command));
             compute("command-name", throwIfPresent(command.getCommandName()));
             compute(DEFAULT_CORRELATION_KEY,
                     throwIfPresent(command.getIdentifier()));
@@ -76,9 +76,9 @@ class SpringBootAuditLogger
             compute("command-events", throwIfPresent(events));
         }
 
-        SuccessfulDataMap(final MessageAuditDataProvider auditDataProvider,
+        SuccessfulDataMap(final MessageAuditDataProvider provider,
                 final EventMessage event) {
-            putAll(auditDataProvider.provideAuditDataFor(event));
+            putAll(provider.provideAuditDataFor(event));
             compute("event-name",
                     throwIfPresent(event.getPayloadType().getName()));
             compute(DEFAULT_CORRELATION_KEY,
@@ -89,10 +89,10 @@ class SpringBootAuditLogger
 
     private static class FailedDataMap
             extends LinkedHashMap<String, Object> {
-        FailedDataMap(final MessageAuditDataProvider auditDataProvider,
+        FailedDataMap(final MessageAuditDataProvider provider,
                 final CommandMessage<?> command, final Throwable failureCause,
                 final List<? extends EventMessage> events) {
-            putAll(auditDataProvider.provideAuditDataFor(command));
+            putAll(provider.provideAuditDataFor(command));
             compute("command-name", throwIfPresent(command.getCommandName()));
             compute(DEFAULT_CORRELATION_KEY,
                     throwIfPresent(command.getIdentifier()));
@@ -101,9 +101,9 @@ class SpringBootAuditLogger
             compute("command-events", throwIfPresent(events));
         }
 
-        FailedDataMap(final MessageAuditDataProvider auditDataProvider,
+        FailedDataMap(final MessageAuditDataProvider provider,
                 final EventMessage event, final Throwable failureCause) {
-            putAll(auditDataProvider.provideAuditDataFor(event));
+            putAll(provider.provideAuditDataFor(event));
             compute("event-name",
                     throwIfPresent(event.getPayloadType().getName()));
             compute(DEFAULT_CORRELATION_KEY,
