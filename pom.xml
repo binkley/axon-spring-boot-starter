@@ -258,6 +258,25 @@
                                         <ignoreClass>
                                             org.xmlpull.v1.XmlPullParserException
                                         </ignoreClass>
+                                        <!-- Thank you, Tomcat -->
+                                        <ignoreClass>
+                                            javax.persistence.PersistenceContexts
+                                        </ignoreClass>
+                                        <ignoreClass>
+                                            javax.persistence.PersistenceContext
+                                        </ignoreClass>
+                                        <ignoreClass>
+                                            javax.persistence.PersistenceContextType
+                                        </ignoreClass>
+                                        <ignoreClass>
+                                            javax.persistence.PersistenceUnits
+                                        </ignoreClass>
+                                        <ignoreClass>
+                                            javax.persistence.PersistenceProperty
+                                        </ignoreClass>
+                                        <ignoreClass>
+                                            javax.persistence.PersistenceUnit
+                                        </ignoreClass>
                                     </ignoreClasses>
                                 </banDuplicateClasses>
                                 <dependencyConvergence>
