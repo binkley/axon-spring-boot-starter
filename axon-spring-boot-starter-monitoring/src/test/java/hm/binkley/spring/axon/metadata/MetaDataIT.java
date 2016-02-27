@@ -27,10 +27,10 @@
 
 package hm.binkley.spring.axon.metadata;
 
+import hm.binkley.spring.axon.shared.TestAuditEventRepository;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +38,10 @@ import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.List;
 import java.util.Map;
 
-import static hm.binkley.spring.axon.AxonCommandAuditEvent
-        .AXON_COMMAND_AUDIT_TYPE;
-import static hm.binkley.spring.axon.AxonEventAuditEvent
-        .AXON_EVENT_AUDIT_TYPE;
+import static hm.binkley.spring.axon.AxonCommandAuditEvent.AXON_COMMAND_AUDIT_TYPE;
+import static hm.binkley.spring.axon.AxonEventAuditEvent.AXON_EVENT_AUDIT_TYPE;
 import static hm.binkley.spring.axon.SpringBootAuditLogger.FAILURE_CAUSE;
 import static hm.binkley.spring.axon.SpringBootAuditLogger.MESSAGE_TYPE;
 import static hm.binkley.spring.axon.SpringBootAuditLogger.RETURN_VALUE;
@@ -57,17 +54,11 @@ public final class MetaDataIT {
     @Autowired
     private CommandGateway commands;
     @Autowired
-    private MetaDataTestConfiguration configuration;
-    private List<AuditEvent> trail;
-
-    @Before
-    public void rememberTrail() {
-        trail = configuration.trail;
-    }
+    private TestAuditEventRepository trail;
 
     @After
-    public void clearTrail() {
-        trail.clear();
+    public void resetTrail() {
+        trail.reset();
     }
 
     @Test
@@ -76,9 +67,10 @@ public final class MetaDataIT {
         final SuccessfulCommand payload = new SuccessfulCommand(aggregateId);
         commands.send(payload);
 
-        assertThat(trail).hasSize(2);
+        assertThat(trail.received()).
+                isEqualTo(2);
 
-        final AuditEvent commandAuditEvent = trail.get(1);
+        final AuditEvent commandAuditEvent = trail.eventAt(1);
         assertThat(commandAuditEvent.getType()).
                 isEqualTo(AXON_COMMAND_AUDIT_TYPE);
         final Map<String, Object> commandData = commandAuditEvent.getData();
@@ -89,7 +81,7 @@ public final class MetaDataIT {
         assertThat(commandData.get(FAILURE_CAUSE)).
                 isNull();
 
-        final AuditEvent eventAuditEvent = trail.get(0);
+        final AuditEvent eventAuditEvent = trail.eventAt(0);
         assertThat(eventAuditEvent.getType()).
                 isEqualTo(AXON_EVENT_AUDIT_TYPE);
         final Map<String, Object> eventData = eventAuditEvent.getData();
@@ -105,9 +97,10 @@ public final class MetaDataIT {
         final FailedCommand payload = new FailedCommand("def", cause);
         commands.send(payload);
 
-        assertThat(trail).hasSize(2);
+        assertThat(trail.received()).
+                isEqualTo(2);
 
-        final AuditEvent commandAuditEvent = trail.get(1);
+        final AuditEvent commandAuditEvent = trail.eventAt(1);
         assertThat(commandAuditEvent.getType()).
                 isEqualTo(AXON_COMMAND_AUDIT_TYPE);
         final Map<String, Object> commandData = commandAuditEvent.getData();
@@ -118,7 +111,7 @@ public final class MetaDataIT {
         assertThat(commandData.get(FAILURE_CAUSE)).
                 isSameAs(cause);
 
-        final AuditEvent eventAuditEvent = trail.get(0);
+        final AuditEvent eventAuditEvent = trail.eventAt(0);
         assertThat(eventAuditEvent.getType()).
                 isEqualTo(AXON_EVENT_AUDIT_TYPE);
         final Map<String, Object> eventData = eventAuditEvent.getData();
@@ -134,11 +127,11 @@ public final class MetaDataIT {
                 new GenericCommandMessage<>(new SuccessfulCommand("abc"),
                         singletonMap("mumble", 3)));
 
-        final Map<String, Object> commandData = trail.get(1).getData();
+        final Map<String, Object> commandData = trail.eventAt(1).getData();
         assertThat(commandData.get("mumble")).
                 isEqualTo(3);
 
-        final Map<String, Object> eventData = trail.get(0).getData();
+        final Map<String, Object> eventData = trail.eventAt(0).getData();
         assertThat(eventData.get("mumble")).
                 isEqualTo(3);
     }
@@ -149,11 +142,11 @@ public final class MetaDataIT {
                 new FailedCommand("abc", new FailedException()),
                 singletonMap("mumble", 3)));
 
-        final Map<String, Object> commandData = trail.get(1).getData();
+        final Map<String, Object> commandData = trail.eventAt(1).getData();
         assertThat(commandData.get("mumble")).
                 isEqualTo(3);
 
-        final Map<String, Object> eventData = trail.get(0).getData();
+        final Map<String, Object> eventData = trail.eventAt(0).getData();
         assertThat(eventData.get("mumble")).
                 isEqualTo(3);
     }

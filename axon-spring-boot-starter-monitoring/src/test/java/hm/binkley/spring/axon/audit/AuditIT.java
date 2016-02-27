@@ -27,11 +27,11 @@
 
 package hm.binkley.spring.axon.audit;
 
+import hm.binkley.spring.axon.shared.TestAuditEventRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.domain.GenericDomainEventMessage;
 import org.axonframework.eventhandling.Cluster;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +39,10 @@ import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.List;
 import java.util.Map;
 
-import static hm.binkley.spring.axon.AxonCommandAuditEvent
-        .AXON_COMMAND_AUDIT_TYPE;
-import static hm.binkley.spring.axon.AxonEventAuditEvent
-        .AXON_EVENT_AUDIT_TYPE;
+import static hm.binkley.spring.axon.AxonCommandAuditEvent.AXON_COMMAND_AUDIT_TYPE;
+import static hm.binkley.spring.axon.AxonEventAuditEvent.AXON_EVENT_AUDIT_TYPE;
 import static hm.binkley.spring.axon.SpringBootAuditLogger.FAILURE_CAUSE;
 import static hm.binkley.spring.axon.SpringBootAuditLogger.MESSAGE_TYPE;
 import static hm.binkley.spring.axon.SpringBootAuditLogger.RETURN_VALUE;
@@ -60,17 +57,11 @@ public final class AuditIT {
     @Autowired
     private Cluster events;
     @Autowired
-    private AuditTestConfiguration configuration;
-    private List<AuditEvent> trail;
-
-    @Before
-    public void rememberTrail() {
-        trail = configuration.trail;
-    }
+    private TestAuditEventRepository trail;
 
     @After
-    public void clearTrail() {
-        trail.clear();
+    public void resetTrail() {
+        trail.reset();
     }
 
     @Test
@@ -78,8 +69,9 @@ public final class AuditIT {
         final SuccessfulCommand payload = new SuccessfulCommand();
         commands.send(payload);
 
-        assertThat(trail).hasSize(1);
-        final AuditEvent auditEvent = trail.get(0);
+        assertThat(trail.received()).
+                isEqualTo(1);
+        final AuditEvent auditEvent = trail.eventAt(0);
         assertThat(auditEvent.getType()).
                 isEqualTo(AXON_COMMAND_AUDIT_TYPE);
         final Map<String, Object> data = auditEvent.getData();
@@ -97,8 +89,9 @@ public final class AuditIT {
         final FailedCommand payload = new FailedCommand(cause);
         commands.send(payload);
 
-        assertThat(trail).hasSize(1);
-        final AuditEvent auditEvent = trail.get(0);
+        assertThat(trail.received()).
+                isEqualTo(1);
+        final AuditEvent auditEvent = trail.eventAt(0);
         assertThat(auditEvent.getType()).
                 isEqualTo(AXON_COMMAND_AUDIT_TYPE);
         final Map<String, Object> data = auditEvent.getData();
@@ -115,8 +108,9 @@ public final class AuditIT {
         final SuccessfulEvent payload = new SuccessfulEvent();
         events.publish(new GenericDomainEventMessage<>("abc", 1L, payload));
 
-        assertThat(trail).hasSize(1);
-        final AuditEvent auditEvent = trail.get(0);
+        assertThat(trail.received()).
+                isEqualTo(1);
+        final AuditEvent auditEvent = trail.eventAt(0);
         assertThat(auditEvent.getType()).
                 isEqualTo(AXON_EVENT_AUDIT_TYPE);
         final Map<String, Object> data = auditEvent.getData();
@@ -135,8 +129,9 @@ public final class AuditIT {
                     new GenericDomainEventMessage<>("abc", 1L, payload));
             fail();
         } catch (final FailedException ignored) {
-            assertThat(trail).hasSize(1);
-            final AuditEvent auditEvent = trail.get(0);
+            assertThat(trail.received()).
+                    isEqualTo(1);
+            final AuditEvent auditEvent = trail.eventAt(0);
             assertThat(auditEvent.getType()).
                     isEqualTo(AXON_EVENT_AUDIT_TYPE);
             final Map<String, Object> data = auditEvent.getData();

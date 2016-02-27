@@ -27,30 +27,24 @@
 
 package hm.binkley.spring.axon.metadata;
 
+import hm.binkley.spring.axon.shared.TestAuditEventRepository;
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.supporting.VolatileEventStore;
-import org.springframework.boot.actuate.audit.AuditEvent;
-import org.springframework.boot.actuate.audit.AuditEventRepository;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Configuration
 @EnableAutoConfiguration
 public class MetaDataTestConfiguration {
-    final List<AuditEvent> trail = new ArrayList<>();
-
     @Bean
     public EventStore eventStore() {
         return new VolatileEventStore();
     }
 
     @Bean
-    public AuditEventRepository auditEventRepository() {
-        return new MetaDataTestAuditEventRepository(this);
+    public TestAuditEventRepository testAuditEventRepository() {
+        return new TestAuditEventRepository();
     }
 
     @Bean
