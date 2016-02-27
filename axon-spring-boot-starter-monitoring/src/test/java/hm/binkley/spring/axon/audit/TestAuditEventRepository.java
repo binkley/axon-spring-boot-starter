@@ -1,4 +1,4 @@
-package hm.binkley.spring.axon.monitoring;
+package hm.binkley.spring.axon.audit;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.audit.AuditEvent;
@@ -10,7 +10,7 @@ import java.util.List;
 @RequiredArgsConstructor
 class TestAuditEventRepository
         implements AuditEventRepository {
-    private final MonitoringTestConfiguration configuration;
+    private final AuditTestConfiguration configuration;
 
     @Override
     public List<AuditEvent> find(final String principal, final Date after) {

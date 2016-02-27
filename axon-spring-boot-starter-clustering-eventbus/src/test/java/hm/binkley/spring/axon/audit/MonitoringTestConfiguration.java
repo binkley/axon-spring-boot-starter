@@ -25,7 +25,7 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.monitoring;
+package hm.binkley.spring.axon.audit;
 
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;

@@ -25,7 +25,7 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.monitoring;
+package hm.binkley.spring.axon.audit;
 
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.supporting.VolatileEventStore;
@@ -40,7 +40,7 @@ import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
-public class MonitoringTestConfiguration {
+public class AuditTestConfiguration {
     final List<AuditEvent> trail = new ArrayList<>();
 
     @Bean

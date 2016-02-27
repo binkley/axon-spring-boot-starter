@@ -25,11 +25,11 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.monitoring;
+package hm.binkley.spring.axon.audit;
 
-import hm.binkley.spring.axon.monitoring.MonitoringTestConfiguration
+import hm.binkley.spring.axon.audit.MonitoringTestConfiguration
         .Processed;
-import hm.binkley.spring.axon.monitoring.MonitoringTestConfiguration
+import hm.binkley.spring.axon.audit.MonitoringTestConfiguration
         .TestEvent;
 import org.axonframework.domain.GenericDomainEventMessage;
 import org.axonframework.eventhandling.EventBus;

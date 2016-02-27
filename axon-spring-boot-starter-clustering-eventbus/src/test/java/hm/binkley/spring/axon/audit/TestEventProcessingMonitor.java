@@ -1,6 +1,6 @@
-package hm.binkley.spring.axon.monitoring;
+package hm.binkley.spring.axon.audit;
 
-import hm.binkley.spring.axon.monitoring.MonitoringTestConfiguration
+import hm.binkley.spring.axon.audit.MonitoringTestConfiguration
         .Processed;
 import org.axonframework.domain.EventMessage;
 import org.axonframework.eventhandling.EventProcessingMonitor;

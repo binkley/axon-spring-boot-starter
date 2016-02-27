@@ -1,4 +1,4 @@
-package hm.binkley.spring.axon.monitoring;
+package hm.binkley.spring.axon.audit;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
 

@@ -25,7 +25,7 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.monitoring;
+package hm.binkley.spring.axon.audit;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.domain.GenericDomainEventMessage;
@@ -53,14 +53,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MonitoringTestConfiguration.class)
-public final class MonitoringIT {
+@SpringApplicationConfiguration(classes = AuditTestConfiguration.class)
+public final class AuditIT {
     @Autowired
     private CommandGateway commands;
     @Autowired
     private Cluster events;
     @Autowired
-    private MonitoringTestConfiguration configuration;
+    private AuditTestConfiguration configuration;
     private List<AuditEvent> trail;
 
     @Before
