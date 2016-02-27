@@ -19,23 +19,25 @@ This project is heavily indebted to:
 
 * Autoconfiguration driven with [standard `@EnableAutoConfiguration` and
   `META-INF/spring.factories`](https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-auto-configuration.html).
-  Include the jar in your classpath and add the annotation to a configuration
-  class.
+  Include the jar in your classpath and add the annotation to a
+  configuration class.
 * Autoconfigure `CommandBus` and `EventBus` with default
-  implementations.  In particular, your configuration must define a bean for
-  `EventStore`: there are too many strategies for event stores for
+  implementations.  In particular, your configuration must define a bean
+  for `EventStore`: there are too many strategies for event stores for
   autoconfiguration to pick a default one for you.
-* Autoconfigure aggregate root repositories marked with `@MetaInfServices`.
-  The matching repository bean is the aggregate bean name appended with
-  "Repository" ("fooRoot" becomes "fooRootRepository").  These generate
-  entries in
+* Autoconfigure aggregate root repositories marked with
+  `@MetaInfServices`.  The matching repository bean is the aggregate
+  bean name appended with "Repository" ("fooRoot" becomes
+  "fooRootRepository").  These generate entries in
   `/META-INF/services/org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot`.
   Note you *must* annotate injected repository fields with
-  `@Qualified(name-of-repostiroy)` because of limitations in Spring's support
-  for generics.
+  `@Qualified(name-of-repostiroy)` because of limitations in Spring's
+  support for generics.
 * Autoconfiguration for event bus clusters.
 * Autoconfiguration for JGroups distributed command bus.
 * Autoconfiguration for event processing monitors.
+* Autoconfiguration for Spring Messaging event cluster.
+* Autoconfiguration for audit and monitoring.
 
 ## Minimal Example
 
@@ -158,6 +160,9 @@ A typical implementation uses JMS (`spring-jms` dependency).
 
 * Autoconfiguration of command dispatch interceptors
 * Autoconfiguration of command handler interceptors
+* Flow of metadata from initial command through consequences
+* Flow of tracking metadata, including from REST controllers onto
+  commands and events
 
 ### 4
 
@@ -171,16 +176,18 @@ A typical implementation uses JMS (`spring-jms` dependency).
 
 ### 2
 
-* Renamed project and modules to meet Spring Boot 3rd-party naming guidelines.
-  So spring-boot-axon-starter becomes axon-spring-boot-starter.  Apologies
-  committers and cloners.  Better now than later.
+* Renamed project and modules to meet Spring Boot 3rd-party naming
+  guidelines.  So spring-boot-axon-starter becomes
+  axon-spring-boot-starter.  Apologies committers and cloners.  Better
+  now than later.
 
 ### 1
 
-* Break project into multi-module reactor build.  Separate axon starters in
-  separate modules.
+* Break project into multi-module reactor build.  Separate axon starters
+  in separate modules.
 * Support JGroups distriuted command bus.
 
 ### 0
 
-* Basic functionality, single project, simple defaults for Axon components
+* Basic functionality, single project, simple defaults for Axon
+  components
