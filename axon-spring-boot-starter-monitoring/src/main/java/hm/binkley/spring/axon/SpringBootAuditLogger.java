@@ -29,7 +29,7 @@ import static org.axonframework.auditing.CorrelationAuditDataProvider
 public class SpringBootAuditLogger
         implements AuditLogger, EventProcessingMonitor,
         ApplicationEventPublisherAware {
-    public static final String NAME = "name";
+    public static final String MESSAGE_TYPE = "message-type";
     public static final String RETURN_VALUE = "return-value";
     public static final String FAILURE_CAUSE = "failure-cause";
     public static final String EVENTS = "events";
@@ -111,7 +111,7 @@ public class SpringBootAuditLogger
             putAll(provider.provideAuditDataFor(message));
             compute(DEFAULT_CORRELATION_KEY,
                     throwIfPresent(message.getIdentifier()));
-            compute(NAME, throwIfPresent(name));
+            compute(MESSAGE_TYPE, throwIfPresent(name));
             compute(RETURN_VALUE, throwIfPresent(returnValue));
             compute(FAILURE_CAUSE, throwIfPresent(failureCause));
             compute(EVENTS, throwIfPresent(events));

@@ -47,7 +47,7 @@ import static hm.binkley.spring.axon.AxonCommandAuditEvent
 import static hm.binkley.spring.axon.AxonEventAuditEvent
         .AXON_EVENT_AUDIT_TYPE;
 import static hm.binkley.spring.axon.SpringBootAuditLogger.FAILURE_CAUSE;
-import static hm.binkley.spring.axon.SpringBootAuditLogger.NAME;
+import static hm.binkley.spring.axon.SpringBootAuditLogger.MESSAGE_TYPE;
 import static hm.binkley.spring.axon.SpringBootAuditLogger.RETURN_VALUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -83,10 +83,12 @@ public final class MonitoringIT {
         assertThat(auditEvent.getType()).
                 isEqualTo(AXON_COMMAND_AUDIT_TYPE);
         final Map<String, Object> data = auditEvent.getData();
-        assertThat(data.get(NAME)).
+        assertThat(data.get(MESSAGE_TYPE)).
                 isEqualTo(payload.getClass().getName());
         assertThat(data.get(RETURN_VALUE)).
                 isEqualTo(3);
+        assertThat(data.get(FAILURE_CAUSE)).
+                isNull();
     }
 
     @Test
@@ -100,8 +102,10 @@ public final class MonitoringIT {
         assertThat(auditEvent.getType()).
                 isEqualTo(AXON_COMMAND_AUDIT_TYPE);
         final Map<String, Object> data = auditEvent.getData();
-        assertThat(data.get(NAME)).
+        assertThat(data.get(MESSAGE_TYPE)).
                 isEqualTo(payload.getClass().getName());
+        assertThat(data.get(RETURN_VALUE)).
+                isNull();
         assertThat(data.get(FAILURE_CAUSE)).
                 isSameAs(cause);
     }
@@ -116,8 +120,10 @@ public final class MonitoringIT {
         assertThat(auditEvent.getType()).
                 isEqualTo(AXON_EVENT_AUDIT_TYPE);
         final Map<String, Object> data = auditEvent.getData();
-        assertThat(data.get(NAME)).
+        assertThat(data.get(MESSAGE_TYPE)).
                 isEqualTo(payload.getClass().getName());
+        assertThat(data.get(FAILURE_CAUSE)).
+                isNull();
     }
 
     @Test
@@ -134,7 +140,7 @@ public final class MonitoringIT {
             assertThat(auditEvent.getType()).
                     isEqualTo(AXON_EVENT_AUDIT_TYPE);
             final Map<String, Object> data = auditEvent.getData();
-            assertThat(data.get(NAME)).
+            assertThat(data.get(MESSAGE_TYPE)).
                     isEqualTo(payload.getClass().getName());
             assertThat(data.get(FAILURE_CAUSE)).
                     isSameAs(cause);

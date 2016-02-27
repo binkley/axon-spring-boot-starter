@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * {@code AxonEventAuditEvent} <strong>needs documentation</strong>.
+ * {@code AxonEventAuditEvent} is a Spring application audit event for Axon
+ * events..
  *
  * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
- * @todo Needs documentation
  */
 public class AxonEventAuditEvent
         extends AxonAuditEvent {
