@@ -32,11 +32,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DirtiesContext
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(
         classes = HandlerInterceptorsTestConfiguration.class)
@@ -50,6 +52,6 @@ public final class HandlerInterceptorsIT {
     public void shouldInterceptInOrder() {
         commands.send(new TestCommand());
 
-        assertThat(configuration.handlings).isEqualTo(asList(2, 1));
+        assertThat(configuration.handlings).isEqualTo(asList(1, 2));
     }
 }
