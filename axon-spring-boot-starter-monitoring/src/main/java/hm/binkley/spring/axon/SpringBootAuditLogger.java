@@ -12,27 +12,18 @@ import org.springframework.context.ApplicationEventPublisherAware;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.function.BiFunction;
+import java.util.Map;
 
-import static hm.binkley.spring.axon.SpringBootAuditLogger.AuditDataMap
-        .failedCommand;
-import static hm.binkley.spring.axon.SpringBootAuditLogger.AuditDataMap
-        .failedEvent;
-import static hm.binkley.spring.axon.SpringBootAuditLogger.AuditDataMap
-        .successfulCommand;
-import static hm.binkley.spring.axon.SpringBootAuditLogger.AuditDataMap
-        .successfulEvent;
-import static org.axonframework.auditing.CorrelationAuditDataProvider
-        .DEFAULT_CORRELATION_KEY;
+import static org.axonframework.auditing.CorrelationAuditDataProvider.DEFAULT_CORRELATION_KEY;
 
 @RequiredArgsConstructor
 public class SpringBootAuditLogger
         implements AuditLogger, EventProcessingMonitor,
         ApplicationEventPublisherAware {
-    public static final String MESSAGE_TYPE = "message-type";
-    public static final String RETURN_VALUE = "return-value";
-    public static final String FAILURE_CAUSE = "failure-cause";
-    public static final String EVENTS = "events";
+    public static final String MESSAGE_TYPE = inNamespace("message-type");
+    public static final String RETURN_VALUE = inNamespace("return-value");
+    public static final String FAILURE_CAUSE = inNamespace("failure-cause");
+    public static final String EVENTS = inNamespace("events");
 
     private final MessageAuditDataProvider provider;
     @Setter
@@ -71,67 +62,51 @@ public class SpringBootAuditLogger
                             failedEvent(provider, event, cause)));
     }
 
-    static final class AuditDataMap
-            extends LinkedHashMap<String, Object> {
-        static AuditDataMap successfulCommand(
-                final MessageAuditDataProvider provider,
-                final CommandMessage<?> command, final Object returnValue,
-                final List<EventMessage> events) {
-            return new AuditDataMap(provider, command,
-                    command.getCommandName(), returnValue, null, events);
-        }
-
-        static AuditDataMap successfulEvent(
-                final MessageAuditDataProvider provider,
-                final EventMessage event) {
-            return new AuditDataMap(provider, event,
-                    event.getPayloadType().getName(), null, null, null);
-        }
-
-        static AuditDataMap failedCommand(
-                final MessageAuditDataProvider provider,
-                final CommandMessage<?> command, final Throwable failureCause,
-                final List<EventMessage> events) {
-            return new AuditDataMap(provider, command,
-                    command.getCommandName(), null, failureCause, events);
-        }
-
-        static AuditDataMap failedEvent(
-                final MessageAuditDataProvider provider,
-                final EventMessage event, final Throwable failureCause) {
-            return new AuditDataMap(provider, event,
-                    event.getPayloadType().getName(), null, failureCause,
-                    null);
-        }
-
-        private AuditDataMap(final MessageAuditDataProvider provider,
-                final Message<?> message, final String name,
-                final Object returnValue, final Throwable failureCause,
-                final List<EventMessage> events) {
-            putAll(provider.provideAuditDataFor(message));
-            compute(DEFAULT_CORRELATION_KEY,
-                    throwIfPresent(message.getIdentifier()));
-            compute(MESSAGE_TYPE, throwIfPresent(name));
-            compute(RETURN_VALUE, throwIfPresent(returnValue));
-            compute(FAILURE_CAUSE, throwIfPresent(failureCause));
-            compute(EVENTS, throwIfPresent(events));
-        }
+    private static String inNamespace(final String key) {
+        return SpringBootAuditLogger.class.getName() + ':' + key;
     }
 
-    private static AuditDataPutter throwIfPresent(final Object value) {
-        return new AuditDataPutter(value);
+    private static Map<String, Object> successfulCommand(
+            final MessageAuditDataProvider provider,
+            final CommandMessage<?> command, final Object returnValue,
+            final List<EventMessage> events) {
+        return auditData(provider, command, command.getCommandName(),
+                returnValue, null, events);
     }
 
-    @RequiredArgsConstructor
-    private static final class AuditDataPutter
-            implements BiFunction<String, Object, Object> {
-        private final Object value;
+    private static Map<String, Object> successfulEvent(
+            final MessageAuditDataProvider provider,
+            final EventMessage event) {
+        return auditData(provider, event, event.getPayloadType().getName(),
+                null, null, null);
+    }
 
-        @Override
-        public Object apply(final String key, final Object oldValue) {
-            if (null == oldValue)
-                return value;
-            throw new DuplicateAuditKeyException(key);
-        }
+    private static Map<String, Object> failedCommand(
+            final MessageAuditDataProvider provider,
+            final CommandMessage<?> command, final Throwable failureCause,
+            final List<EventMessage> events) {
+        return auditData(provider, command, command.getCommandName(), null,
+                failureCause, events);
+    }
+
+    private static Map<String, Object> failedEvent(
+            final MessageAuditDataProvider provider, final EventMessage event,
+            final Throwable failureCause) {
+        return auditData(provider, event, event.getPayloadType().getName(),
+                null, failureCause, null);
+    }
+
+    private static Map<String, Object> auditData(
+            final MessageAuditDataProvider provider, final Message<?> message,
+            final String name, final Object returnValue,
+            final Throwable failureCause, final List<EventMessage> events) {
+        final Map<String, Object> map = new LinkedHashMap<>();
+        map.putAll(provider.provideAuditDataFor(message));
+        map.put(DEFAULT_CORRELATION_KEY, message.getIdentifier());
+        map.put(MESSAGE_TYPE, name);
+        map.put(RETURN_VALUE, returnValue);
+        map.put(FAILURE_CAUSE, failureCause);
+        map.put(EVENTS, events);
+        return map;
     }
 }
