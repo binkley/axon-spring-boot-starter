@@ -33,7 +33,6 @@ import org.axonframework.commandhandling.annotation
         .AnnotationCommandHandlerBeanPostProcessor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
-import org.axonframework.domain.IdentifierFactory;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventsourcing.annotation
         .AbstractAnnotatedAggregateRoot;
@@ -114,6 +113,12 @@ public class AxonAutoConfiguration {
                 eventStore);
     }
 
+    @Bean
+    public AnnotationCommandHandlerBeanPostProcessor
+    annotationCommandHandlerBeanPostProcessor() {
+        return new AnnotationCommandHandlerBeanPostProcessor();
+    }
+
     @PostConstruct
     public void registerRepositories() {
         stream(load(AbstractAnnotatedAggregateRoot.class).spliterator(),
@@ -121,18 +126,5 @@ public class AxonAutoConfiguration {
                 map(Object::getClass).
                 distinct().
                 forEach(context::register);
-    }
-
-    @Bean
-    public AnnotationCommandHandlerBeanPostProcessor
-    annotationCommandHandlerBeanPostProcessor() {
-        return new AnnotationCommandHandlerBeanPostProcessor();
-    }
-
-    /** @todo Javadoc says this is auto-detected from ServiceLoader */
-    @Bean
-    @ConditionalOnMissingBean
-    public IdentifierFactory identifierFactory() {
-        return IdentifierFactory.getInstance();
     }
 }

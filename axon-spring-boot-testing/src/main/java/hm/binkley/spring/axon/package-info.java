@@ -25,51 +25,10 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.monitoring;
-
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-import org.axonframework.domain.EventMessage;
-import org.axonframework.eventhandling.annotation.EventHandler;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
-
-@Configuration
-@EnableAutoConfiguration
-public class MonitoringTestConfiguration {
-    @Bean
-    public TestEventProcessingMonitor testEventProcessingMonitor() {
-        return new TestEventProcessingMonitor();
-    }
-
-    @Bean
-    public Handler testHandler() {
-        return new Handler();
-    }
-
-    @RequiredArgsConstructor
-    static final class Processed {
-        public final List<EventMessage> messages;
-        public final Throwable cause;
-    }
-
-    @EqualsAndHashCode
-    @RequiredArgsConstructor
-    @ToString
-    static final class TestEvent {
-        private final Exception fail;
-    }
-
-    private static class Handler {
-        @EventHandler
-        void handle(final TestEvent event)
-                throws Exception {
-            if (null != event.fail)
-                throw event.fail;
-        }
-    }
-}
+/**
+ * The axon-spring-boot-testing module is for test support of other modules.
+ * Do not use this module directly.
+ *
+ * @author <a href="mailto:binkley@alumni.rice.edu">B. K. Oxley (binkley)</a>
+ */
+package hm.binkley.spring.axon;

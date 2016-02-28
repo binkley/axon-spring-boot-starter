@@ -33,7 +33,6 @@ import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventsourcing.EventSourcedAggregateRoot;
 import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.axonframework.eventstore.EventStore;
-import org.axonframework.repository.AbstractRepository;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -46,7 +45,7 @@ import static org.axonframework.commandhandling.annotation
         .AggregateAnnotationCommandHandler.subscribe;
 
 @RequiredArgsConstructor
-public class EventSourcingRepositoryRegistrar
+class EventSourcingRepositoryRegistrar
         implements BeanPostProcessor, BeanFactoryAware {
     private final CommandBus commandBus;
     private final EventBus eventBus;
@@ -70,19 +69,20 @@ public class EventSourcingRepositoryRegistrar
     public Object postProcessAfterInitialization(final Object bean,
             final String beanName)
             throws BeansException {
-        final Class<?> beanType = bean.getClass();
-        if (!EventSourcedAggregateRoot.class.isAssignableFrom(beanType))
-            return bean;
-
-        final AbstractRepository repository = new EventSourcingRepository(
-                beanType, eventStore);
-        repository.setEventBus(eventBus);
-        subscribe((Class<? extends EventSourcedAggregateRoot>) beanType,
-                repository, commandBus);
-
-        beanFactory.registerSingleton(format("%sRepository", beanName),
-                repository);
-
+        final Class beanType = bean.getClass();
+        if (EventSourcedAggregateRoot.class.isAssignableFrom(beanType))
+            beanFactory.registerSingleton(format("%sRepository", beanName),
+                    repositoryFor(beanType));
         return bean;
+    }
+
+    private <R extends EventSourcedAggregateRoot>
+    EventSourcingRepository<R> repositoryFor(
+            final Class<R> beanType) {
+        final EventSourcingRepository<R> repository
+                = new EventSourcingRepository<>(beanType, eventStore);
+        repository.setEventBus(eventBus);
+        subscribe(beanType, repository, commandBus);
+        return repository;
     }
 }

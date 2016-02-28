@@ -1,0 +1,7 @@
+axon:
+  cluster:
+    name: TEST
+
+spring:
+  main:
+    show-banner: false

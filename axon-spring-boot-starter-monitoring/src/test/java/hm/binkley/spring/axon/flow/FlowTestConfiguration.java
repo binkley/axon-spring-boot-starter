@@ -25,11 +25,37 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.handlers;
+package hm.binkley.spring.axon.flow;
 
-import lombok.Value;
+import hm.binkley.spring.axon.shared.TestAuditEventRepository;
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.eventstore.EventStore;
+import org.axonframework.eventstore.supporting.VolatileEventStore;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@Value
-public class TestEvent {
-    private final String id;
+@Configuration
+@EnableAutoConfiguration
+public class FlowTestConfiguration {
+    @Bean
+    public EventStore eventStore() {
+        return new VolatileEventStore();
+    }
+
+    @Bean
+    public TestAuditEventRepository testAuditEventRepository() {
+        return new TestAuditEventRepository();
+    }
+
+    @Bean
+    public InitialEventHandler successfulEventHandler(
+            final CommandGateway commands) {
+        return new InitialEventHandler(commands);
+    }
+
+    @Bean
+    public TerminalCommandHandler terminalCommandHandler() {
+        return new TerminalCommandHandler();
+    }
 }

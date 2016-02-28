@@ -25,11 +25,11 @@
  * For more information, please refer to <http://unlicense.org/>.
  */
 
-package hm.binkley.spring.axon.monitoring;
+package hm.binkley.spring.axon.audit;
 
-import hm.binkley.spring.axon.monitoring.MonitoringTestConfiguration
+import hm.binkley.spring.axon.audit.MonitoringTestConfiguration
         .Processed;
-import hm.binkley.spring.axon.monitoring.MonitoringTestConfiguration
+import hm.binkley.spring.axon.audit.MonitoringTestConfiguration
         .TestEvent;
 import org.axonframework.domain.GenericDomainEventMessage;
 import org.axonframework.eventhandling.EventBus;
@@ -38,10 +38,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DirtiesContext
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = MonitoringTestConfiguration.class)
 public final class MonitoringIT {

@@ -32,11 +32,11 @@ import hm.binkley.spring.axon.handlers.HandlersTestConfiguration
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.domain.DomainEventStream;
 import org.axonframework.eventstore.EventStore;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
@@ -45,6 +45,7 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DirtiesContext
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = HandlersTestConfiguration.class)
 public final class HandlersIT {
@@ -55,32 +56,27 @@ public final class HandlersIT {
     @Autowired
     private EventStore eventStore;
 
-    @Before
-    public void sendCommand() {
-        ;
-    }
-
     @Test
     public void shouldWireEventStore() {
-        commands.send(new TestCommand("abc"));
+        commands.send(new HandlersTestCommand("abc"));
         assertThat(asAggregateIds(eventStore
                 .readEvents(HandlersTestAggregateRoot.class.getSimpleName(),
                         "abc"))).
-                isEqualTo(singletonList(new TestEvent("abc")));
+                isEqualTo(singletonList(new HandlersTestEvent("abc")));
     }
 
     @Test
     public void shouldFireHandlers() {
-        commands.send(new TestCommand("def"));
+        commands.send(new HandlersTestCommand("def"));
         assertThat(eventCollector.getEvents()).
-                isEqualTo(singletonList(new TestEvent("def")));
+                isEqualTo(singletonList(new HandlersTestEvent("def")));
     }
 
-    private static List<TestEvent> asAggregateIds(
+    private static List<HandlersTestEvent> asAggregateIds(
             final DomainEventStream stream) {
-        final List<TestEvent> events = new ArrayList<>();
+        final List<HandlersTestEvent> events = new ArrayList<>();
         while (stream.hasNext())
-            events.add((TestEvent) stream.next().getPayload());
+            events.add((HandlersTestEvent) stream.next().getPayload());
         return events;
     }
 }

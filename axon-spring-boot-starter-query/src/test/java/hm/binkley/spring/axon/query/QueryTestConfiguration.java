@@ -27,17 +27,9 @@
 
 package hm.binkley.spring.axon.query;
 
-import org.axonframework.eventstore.EventStore;
-import org.axonframework.eventstore.supporting.VolatileEventStore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableAutoConfiguration
-public class QueryTestConfiguration {
-    @Bean
-    public EventStore eventStore() {
-        return new VolatileEventStore();
-    }
-}
+public class QueryTestConfiguration {}

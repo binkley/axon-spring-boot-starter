@@ -43,18 +43,17 @@ import java.util.List;
 @EnableAutoConfiguration
 public class HandlersTestConfiguration {
     @Bean
-    public EventStore eventStore()
-            throws Exception {
+    public EventStore eventStore() {
         return new VolatileEventStore();
     }
 
     @Component
     @Getter
     public static class EventCollector {
-        private final List<TestEvent> events = new ArrayList<>();
+        private final List<HandlersTestEvent> events = new ArrayList<>();
 
         @EventHandler
-        public void on(final TestEvent event) {
+        public void on(final HandlersTestEvent event) {
             events.add(event);
         }
     }
