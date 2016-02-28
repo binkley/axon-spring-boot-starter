@@ -28,6 +28,7 @@
 package hm.binkley.spring.axon.interceptors;
 
 import org.axonframework.commandhandling.CommandDispatchInterceptor;
+import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.supporting.VolatileEventStore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -49,20 +50,34 @@ public class DispatchInterceptorsTestConfiguration {
     }
 
     @Bean
-    @Order(2)
     public CommandDispatchInterceptor aCommandHandlerInterceptor() {
-        return commandMessage -> {
-            handlings.add(2);
-            return commandMessage;
-        };
+        return new ACommandDispatchInterceptor();
     }
 
     @Bean
-    @Order(1)
     public CommandDispatchInterceptor bCommandHandlerInterceptor() {
-        return commandMessage -> {
+        return new BCommandDispatchInterceptor();
+    }
+
+    @Order(2)
+    private class ACommandDispatchInterceptor
+            implements CommandDispatchInterceptor {
+        @Override
+        public CommandMessage<?> handle(
+                final CommandMessage<?> commandMessage) {
+            handlings.add(2);
+            return commandMessage;
+        }
+    }
+
+    @Order(1)
+    private class BCommandDispatchInterceptor
+            implements CommandDispatchInterceptor {
+        @Override
+        public CommandMessage<?> handle(
+                final CommandMessage<?> commandMessage) {
             handlings.add(1);
             return commandMessage;
-        };
+        }
     }
 }

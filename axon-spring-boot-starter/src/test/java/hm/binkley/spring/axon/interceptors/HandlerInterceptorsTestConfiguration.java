@@ -29,9 +29,12 @@ package hm.binkley.spring.axon.interceptors;
 
 import lombok.Getter;
 import org.axonframework.commandhandling.CommandHandlerInterceptor;
+import org.axonframework.commandhandling.CommandMessage;
+import org.axonframework.commandhandling.InterceptorChain;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.supporting.VolatileEventStore;
+import org.axonframework.unitofwork.UnitOfWork;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,21 +55,13 @@ public class HandlerInterceptorsTestConfiguration {
     }
 
     @Bean
-    @Order(2)
     public CommandHandlerInterceptor aCommandHandlerInterceptor() {
-        return (commandMessage, unitOfWork, interceptorChain) -> {
-            handlings.add(2);
-            return interceptorChain.proceed();
-        };
+        return new ACommandHandlerInterceptor();
     }
 
     @Bean
-    @Order(1)
     public CommandHandlerInterceptor bCommandHandlerInterceptor() {
-        return (commandMessage, unitOfWork, interceptorChain) -> {
-            handlings.add(1);
-            return interceptorChain.proceed();
-        };
+        return new BCommandHandlerInterceptor();
     }
 
     @Component
@@ -74,5 +69,31 @@ public class HandlerInterceptorsTestConfiguration {
     public static class TestCommandHandler {
         @CommandHandler
         public void on(final TestCommand ignored) { }
+    }
+
+    @Order(2)
+    private class ACommandHandlerInterceptor
+            implements CommandHandlerInterceptor {
+        @Override
+        public Object handle(final CommandMessage<?> commandMessage,
+                final UnitOfWork unitOfWork,
+                final InterceptorChain interceptorChain)
+                throws Throwable {
+            handlings.add(2);
+            return interceptorChain.proceed();
+        }
+    }
+
+    @Order(1)
+    private class BCommandHandlerInterceptor
+            implements CommandHandlerInterceptor {
+        @Override
+        public Object handle(final CommandMessage<?> commandMessage,
+                final UnitOfWork unitOfWork,
+                final InterceptorChain interceptorChain)
+                throws Throwable {
+            handlings.add(1);
+            return interceptorChain.proceed();
+        }
     }
 }
