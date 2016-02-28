@@ -94,7 +94,7 @@ public final class MetaDataIT {
     }
 
     @Test
-    public void shouldAuditWhenFaileds() {
+    public void shouldAuditWhenFailed() {
         final FailedException cause = new FailedException();
         final FailedCommand payload = new FailedCommand("def", cause);
         commands.send(payload);

@@ -14,12 +14,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.axonframework.auditing.CorrelationAuditDataProvider.DEFAULT_CORRELATION_KEY;
+import static org.axonframework.auditing.CorrelationAuditDataProvider
+        .DEFAULT_CORRELATION_KEY;
 
 @RequiredArgsConstructor
 public class SpringBootAuditLogger
         implements AuditLogger, EventProcessingMonitor,
         ApplicationEventPublisherAware {
+    public static final String PARENT_CORRELATION_ID = inNamespace(
+            "parent-correlation-id");
     public static final String MESSAGE_TYPE = inNamespace("message-type");
     public static final String RETURN_VALUE = inNamespace("return-value");
     public static final String FAILURE_CAUSE = inNamespace("failure-cause");

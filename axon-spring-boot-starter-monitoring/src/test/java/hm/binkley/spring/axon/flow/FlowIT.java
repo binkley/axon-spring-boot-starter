@@ -28,6 +28,7 @@
 package hm.binkley.spring.axon.flow;
 
 import hm.binkley.spring.axon.shared.TestAuditEventRepository;
+import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.junit.After;
 import org.junit.Test;
@@ -40,10 +41,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Map;
 
-import static hm.binkley.spring.axon.AxonCommandAuditEvent.AXON_COMMAND_AUDIT_TYPE;
-import static hm.binkley.spring.axon.AxonEventAuditEvent.AXON_EVENT_AUDIT_TYPE;
+import static hm.binkley.spring.axon.AxonCommandAuditEvent
+        .AXON_COMMAND_AUDIT_TYPE;
+import static hm.binkley.spring.axon.AxonEventAuditEvent
+        .AXON_EVENT_AUDIT_TYPE;
 import static hm.binkley.spring.axon.SpringBootAuditLogger.MESSAGE_TYPE;
+import static java.util.Collections.singletonMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.axonframework.correlation.CorrelationDataHolder
+        .getCorrelationData;
 
 @DirtiesContext
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,7 +66,7 @@ public final class FlowIT {
     }
 
     @Test
-    public void shouldAuditWhenSuccessful() {
+    public void shouldAuditCommandToEventToCommand() {
         final String aggregateId = "abc";
         final InitialCommand payload = new InitialCommand(aggregateId);
         commands.send(payload);
@@ -91,5 +97,34 @@ public final class FlowIT {
                 = terminalCommandAuditEvent.getData();
         assertThat(terminalCommandData.get(MESSAGE_TYPE)).
                 isEqualTo(TerminalCommand.class.getName());
+    }
+
+    @Test
+    public void shouldPassMetaDataCommandToEventToCommand() {
+        commands.send(new GenericCommandMessage<>(new InitialCommand("abc"),
+                singletonMap("mumble", 3)));
+
+        final Map<String, Object> initialCommandData = trail.eventAt(2)
+                .getData();
+        assertThat(initialCommandData.get("mumble")).
+                isEqualTo(3);
+
+        final Map<String, Object> initialEventData = trail.eventAt(1)
+                .getData();
+        assertThat(initialEventData.get("mumble")).
+                isEqualTo(3);
+
+        final Map<String, Object> terminalCommandData = trail.eventAt(0)
+                .getData();
+        assertThat(terminalCommandData.get("mumble")).
+                isEqualTo(3);
+    }
+
+    @Test
+    public void shouldReleaseThreadLocalWhenDone() {
+        commands.send(new InitialCommand("abc"));
+
+        assertThat(getCorrelationData()).
+                isEmpty();
     }
 }

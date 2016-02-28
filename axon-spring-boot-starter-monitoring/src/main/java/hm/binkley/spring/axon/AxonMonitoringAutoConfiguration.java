@@ -86,4 +86,11 @@ public class AxonMonitoringAutoConfiguration {
     public AuditLogger auditLogger(final MessageAuditDataProvider provider) {
         return new SpringBootAuditLogger(provider);
     }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CorrelationDataCommandDispatchInterceptor
+    correlationDataCommandDispatchInterceptor() {
+        return new CorrelationDataCommandDispatchInterceptor();
+    }
 }
