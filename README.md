@@ -37,6 +37,7 @@ This project is heavily indebted to:
 * Autoconfiguration for JGroups distributed command bus.
 * Autoconfiguration for event processing monitors.
 * Autoconfiguration for Spring Messaging event cluster.
+* Autoconfiguration for command dispatch and handler interceptors.
 * Autoconfiguration for audit and monitoring.
 
 ## Minimal Example
@@ -114,6 +115,28 @@ axon:
 
 And include a suitable `jgroups-config.xml` in your classpath.
 
+### Command dispatch interceptors
+
+```
+@Order(1)
+public class ADispatchInterceptor implements CommandDispatchInterceptor {
+    // ...
+}
+```
+
+Exposed as a bean, such interceptors are invoked in order.
+
+### Command handler interceptors
+
+```
+@Order(1)
+public class AHandlerInterceptor implements CommandHandlerInterceptor {
+    // ...
+}
+```
+
+Exposed as a bean, such interceptors are invoked in order.
+
 ### Event processing monitor
 
 Include `axon-spring-boot-starter-clustering-eventbus` in your dependencies.
@@ -154,15 +177,28 @@ public class AConfiguration {
 
 A typical implementation uses JMS (`spring-jms` dependency).
 
+### Spring Boot auditing
+
+```
+@Configuration
+@EnableAutoConfiguration
+public class AConfiguration {
+    @Bean
+    public AuditEventRepository auditEventRepository() {
+        return ...;
+    }
+}
+```
+
+Include `axon-spring-boot-start-monitoring` in your dependencies.  Both
+commands and events are audited through Spring Boot.
+
 ## Releases
 
 ### 5
 
-* Autoconfiguration of command dispatch interceptors
-* Autoconfiguration of command handler interceptors
+* Autoconfiguration of command dispatch and handler interceptors
 * Flow of metadata from initial command through consequences
-* Flow of tracking metadata, including from REST controllers onto
-  commands and events
 
 ### 4
 
