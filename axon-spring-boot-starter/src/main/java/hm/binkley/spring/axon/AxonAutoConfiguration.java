@@ -119,10 +119,16 @@ public class AxonAutoConfiguration {
         return new AnnotationCommandHandlerBeanPostProcessor();
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public AnnotationConfigRegistry annotationConfigRegistry() {
+        return (AnnotationConfigRegistry) context;
+    }
+
     @PostConstruct
     public void registerRepositories() {
-        final AnnotationConfigRegistry registry
-                = (AnnotationConfigRegistry) context;
+        final AnnotationConfigRegistry registry = context
+                .getBean(AnnotationConfigRegistry.class);
         stream(load(AbstractAnnotatedAggregateRoot.class).spliterator(),
                 false).
                 map(Object::getClass).
