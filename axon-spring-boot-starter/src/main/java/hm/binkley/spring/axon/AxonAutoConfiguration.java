@@ -120,7 +120,6 @@ public class AxonAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean
     public AnnotationConfigRegistry annotationConfigRegistry() {
         return (AnnotationConfigRegistry) context;
     }
