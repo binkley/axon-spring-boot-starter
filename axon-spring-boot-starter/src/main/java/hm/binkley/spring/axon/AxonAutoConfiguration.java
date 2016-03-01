@@ -42,8 +42,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition
         .ConditionalOnMissingBean;
-import org.springframework.context.annotation
-        .AnnotationConfigApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -90,7 +90,7 @@ import static java.util.stream.StreamSupport.stream;
 @Configuration
 public class AxonAutoConfiguration {
     @Autowired
-    private AnnotationConfigApplicationContext context;
+    private ConfigurableApplicationContext context;
 
     @Bean
     @ConditionalOnMissingBean
@@ -121,10 +121,12 @@ public class AxonAutoConfiguration {
 
     @PostConstruct
     public void registerRepositories() {
+        final AnnotationConfigRegistry registry
+                = (AnnotationConfigRegistry) context;
         stream(load(AbstractAnnotatedAggregateRoot.class).spliterator(),
                 false).
                 map(Object::getClass).
                 distinct().
-                forEach(context::register);
+                forEach(registry::register);
     }
 }
