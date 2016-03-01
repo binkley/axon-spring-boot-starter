@@ -195,6 +195,10 @@ commands and events are audited through Spring Boot.
 
 ## Releases
 
+### 6
+
+* Web application support.
+
 ### 5
 
 * Autoconfiguration of command dispatch and handler interceptors
