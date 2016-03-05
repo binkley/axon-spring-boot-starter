@@ -197,6 +197,7 @@ commands and events are audited through Spring Boot.
 
 ### 6
 
+* Spring Platform instead of only Boot as parent.
 * Web application support.
 
 ### 5
