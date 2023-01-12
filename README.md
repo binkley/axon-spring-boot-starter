@@ -7,6 +7,8 @@ This software is in the Public Domain.  Please see [LICENSE.md](LICENSE.md).
 [![Issues](https://img.shields.io/github/issues/binkley/spring-boot-starter-axon.svg)](https://github.com/binkley/spring-boot-starter-axon/issues)
 [![maven-central](https://img.shields.io/maven-central/v/hm.binkley/spring-boot-starter-axon.svg)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22hm.binkley%22%20AND%20a%3A%22spring-boot-starter-axon%22)
 
+I no longer maintain this repo but keep it for reference for other.
+
 ## Acknowledgment
 
 This project is heavily indebted to:
